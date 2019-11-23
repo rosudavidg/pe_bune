@@ -13,10 +13,16 @@ CREATE TABLE users (
     last_name varchar(256) NOT NULL,
     level int NOT NULL,
     experience int NOT NULL,
+    created_date date NOT NULL,
     PRIMARY KEY (username)
 );
 
 -- Crearea tabelei pentru sesiuni
+CREATE TABLE sessions (
+    username varchar(64),
+    token varchar(256) NOT NULL,
+    PRIMARY KEY (token)
+);
 
 -- Crearea tabelei pentru intrebari
 
