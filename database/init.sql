@@ -13,7 +13,7 @@ CREATE TABLE users (
     last_name varchar(256) NOT NULL,
     level int NOT NULL,
     experience int NOT NULL,
-    created_date date NOT NULL,
+    created_date datetime NOT NULL,
     PRIMARY KEY (username)
 );
 
