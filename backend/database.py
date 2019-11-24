@@ -38,7 +38,7 @@ class DB():
     def register(self, username, password, email, first_name, last_name):
         try:
             cursor = self.db.cursor(pymysql.cursors.DictCursor)
-            cursor.callproc('create_new_user', [username, password, email, first_name, last_name])
+            cursor.callproc('create_new_user', [username, security.encrypt_password(password), email, first_name, last_name])
         except Exception as e:
             raise Exception(error.Error.new(e))
         finally:

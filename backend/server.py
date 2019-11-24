@@ -14,9 +14,25 @@ config = None
 def register():
     resp = make_response()
 
+    if request == None:
+        return resp, 400
+    
+    if request.json == None:
+        return resp, 400
+
+    if 'username' not in request.json \
+        or 'password' not in request.json \
+        or 'email' not in request.json \
+        or 'first_name' not in request.json \
+        or 'last_name' not in request.json:
+        return resp, 400
+
     try:
-        db = database.DB()
-        db.register('rosudavidg3', '1234', 'rosudavidg2@gmail.com', 'David', 'Rosu')
+        database.DB().register(request.json['username'],
+            request.json['password'],
+            request.json['email'],
+            request.json['first_name'],
+            request.json['last_name'])
 
         return resp, 200
     except Exception as e:

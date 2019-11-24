@@ -2,8 +2,9 @@ from enum import Enum
 
 class Error(Enum):
     UNKNOWN = 0
-    INVALID_USERNAME = 1
-    INVALID_EMAIL = 2
+    INVALID_INPUT = 1
+    INVALID_USERNAME = 2
+    INVALID_EMAIL = 3
 
     def __str__(self):
         return self.name
