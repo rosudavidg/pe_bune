@@ -1,0 +1,13 @@
+{
+    "database": {
+        "host": "localhost",
+        "database": "pe_bune",
+        "user": "david",
+        "password": "david",
+        "port": 3306
+    },
+    "backend": {
+        "host": "localhost",
+        "port": "4242"
+    }
+}
