@@ -21,5 +21,6 @@ BEGIN
             0,
             0,
             sysdate());
+    COMMIT;
 END //
 DELIMITER ;
