@@ -7,8 +7,13 @@ import datetime
 from flask_cors import CORS
 
 app = Flask(__name__)
+app.secret_key = "dabumts secret key"
 CORS(app, supports_credentials=True)
 config = None
+
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -33,6 +38,8 @@ def register():
             request.json['email'],
             request.json['first_name'],
             request.json['last_name'])
+        
+        database.DB().send_activation_link(request.json['email'])
 
         return resp, 200
     except Exception as e:
@@ -47,9 +54,29 @@ def register():
 
         return resp, 400
 
-@app.route('/')
-def home():
-    return render_template('home.html')
+@app.route('/api/confirm/<token>', methods=['GET'])
+def confirm(token):
+    resp = make_response()
+    
+    try:
+        result = database.DB().confirm_user(token)
+        
+        if result:
+            return render_template('confirm.html', message='Email confirmed!'), 200
+        else:
+            return render_template('confirm.html', message='This link is not valid.'), 410
+
+    except Exception as e:
+        resp = app.response_class(
+            response=json.dumps(
+                {
+                    'error' : str(e)
+                }
+            ),
+            mimetype='application/json'
+        )
+
+        return resp, 404
 
 if __name__ == '__main__':
     try:
@@ -60,4 +87,4 @@ if __name__ == '__main__':
         exit(-1)
 
     app.run(host=config['backend']['host'],
-            port=config['backend']['port'], debug=True)
+            port=config['backend']['port'], debug=True)#, ssl_context='adhoc')

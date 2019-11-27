@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PE BUNE?!</title>
+    <style>
+        div.container {
+            height: 10em;
+            position: relative;
+        }
+
+        div.container-small {
+            height: 5em;
+            position: relative;
+        }
+
+        div.message {
+            font: 16px/1.5 "Dosis", sans-serif;
+            color: black;
+            font-size: 3vw;
+        }
+
+        div.center {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+
+        div.wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+
+        }
+
+        div.top {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            align-content: center;
+
+            display: flex;
+            order: 1;
+            width: 100%;
+            margin-top: 15px;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"> </div>
+    <div class="container center">
+        <div class="message">{{ message }}</div>
+    </div>
+    <div class="container"> </div>
+    <div class="container-small"> </div>
+    <div class="container-small"> </div>
+    <div class="container-small center" style="background-color:silver;">
+        <div style="margin-top: 1.5em;">
+            <div style="text-align:center;">
+                Pe bune?!
+            </div>
+            <div style="text-align:center;">
+                © Gabriel-David Rosu 2019
+            </div>
+        </div>
+    </div>
+    <!-- <div class="wrapper">
+        <div class="top"></div>
+        <div class="top">
+            <div class="container center">
+                <div class="message">{{ message }}</div>
+            </div>
+        </div>
+    </div> -->
+</body>
+
+</html>

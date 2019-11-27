@@ -1,4 +1,5 @@
 from passlib.context import CryptContext
+import secrets
 
 pwd_context = CryptContext(
         schemes=["pbkdf2_sha256"],
@@ -18,3 +19,6 @@ def check_encrypted_password(password, hashed):
         return False
     
     return True
+
+def activation_token():
+    return secrets.token_urlsafe(32)

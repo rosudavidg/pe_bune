@@ -18,5 +18,5 @@ class Error(Enum):
             if 'email' in message:  
                 return Error.INVALID_EMAIL
             
-            return Error.UNKNOWN
+        return Error.UNKNOWN
             

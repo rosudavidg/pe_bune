@@ -14,14 +14,22 @@ CREATE TABLE users (
     level int NOT NULL,
     experience int NOT NULL,
     created_date datetime NOT NULL,
+    activated BOOLEAN NOT NULL,
     PRIMARY KEY (username)
 );
 
 -- Crearea tabelei pentru sesiuni
 CREATE TABLE sessions (
-    username varchar(64),
-    token varchar(256) NOT NULL,
+    username varchar(64) NOT NULL,
+    token varchar(256),
     PRIMARY KEY (token)
+);
+
+-- Crearea tabelei pentru activation token
+CREATE TABLE activations (
+    email varchar(256) NOT NULL,
+    token varchar(64),
+    PRIMARY KEY (email)
 );
 
 -- Crearea tabelei pentru intrebari
