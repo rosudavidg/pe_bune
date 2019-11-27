@@ -22,6 +22,7 @@ CREATE TABLE users (
 CREATE TABLE sessions (
     username varchar(64) NOT NULL,
     token varchar(256),
+    expiration_date datetime NOT NULL,
     PRIMARY KEY (token)
 );
 

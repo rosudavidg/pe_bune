@@ -67,3 +67,73 @@ BEGIN
     ;
 END //
 DELIMITER ;
+
+-- Procedura primeste username-ul si paseaza inapoi parola criptata
+DELIMITER //
+CREATE PROCEDURE get_password (
+    IN in_username varchar(64),
+    OUT out_password varchar(256))
+BEGIN
+    SELECT
+        password INTO out_password
+        FROM users
+        WHERE username = in_username
+    ;
+END //
+DELIMITER ;
+
+-- Procedura primeste username-ul si intoarce daca contul este activat sau nu
+DELIMITER //
+CREATE PROCEDURE is_active (
+    IN in_username varchar(64),
+    OUT out_active boolean)
+BEGIN
+    DECLARE counter integer;
+
+    SELECT
+        COUNT(*) INTO counter
+        FROM users
+        WHERE username = in_username
+        AND activated = TRUE
+    ;
+
+    IF counter = 1 THEN
+        SET out_active = TRUE;
+    ELSE
+        SET out_active = FALSE;
+    END IF;
+END //
+DELIMITER ;
+
+-- Procedura de adaugare a unui sesiuni noi
+DELIMITER //
+CREATE PROCEDURE create_session (
+    IN username varchar(64),
+    IN token varchar(256),
+    OUT out_ex_date datetime)
+BEGIN
+    SET out_ex_date = ADDDATE(sysdate(), INTERVAL 1 WEEK);
+
+    INSERT
+        INTO sessions
+        VALUES (
+            username,
+            token,
+            out_ex_date
+        );
+    COMMIT;
+END //
+DELIMITER ;
+
+-- Procedura pentru stergea sesiunilor active, atunci cand una este adaugata
+DELIMITER //
+CREATE PROCEDURE delete_sessions (
+    IN username varchar(64))
+BEGIN
+    DELETE
+        FROM sessions s
+        WHERE s.username = username
+    ;
+    COMMIT;
+END //
+DELIMITER ;

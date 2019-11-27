@@ -22,3 +22,6 @@ def check_encrypted_password(password, hashed):
 
 def activation_token():
     return secrets.token_urlsafe(32)
+
+def login_token(username):
+    return username + ':' + secrets.token_hex(32)

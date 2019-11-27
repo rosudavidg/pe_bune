@@ -66,3 +66,35 @@ class DB():
         finally:
             cursor.close()
     
+    def login(self, username, password):
+        try:
+            # Verificare existenta user
+            cursor = self.db.cursor()
+            hashed = cursor.callproc('get_password', (username, ''))[1]
+            
+            if hashed == None:
+                return None
+
+            # Verificare parola
+            if not security.check_encrypted_password(password, hashed):
+                return None
+
+            # Verificare cont activ
+            is_active = cursor.callproc('is_active', (username, ''))[1]
+
+            if not is_active:
+                return None
+
+            # Stergere sesiuni vechi
+            cursor.callproc('delete_sessions', (username, ))
+
+            # Adaugare sesiune
+            token = security.login_token(username)
+            expiration_date = cursor.callproc('create_session', (username, token, ''))[2]
+
+            return (token, expiration_date)
+        except Exception as e:
+            print(e)
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()

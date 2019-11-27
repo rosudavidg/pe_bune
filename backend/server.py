@@ -4,6 +4,7 @@ import json
 import connexion
 import database
 import datetime
+import time
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -77,6 +78,50 @@ def confirm(token):
         )
 
         return resp, 404
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    resp = make_response()
+
+    if request == None:
+        return resp, 400
+    
+    if request.json == None:
+        return resp, 400
+
+    if 'username' not in request.json \
+        or 'password' not in request.json:
+        return resp, 400
+
+    try:
+        res = database.DB().login(request.json['username'],
+            request.json['password'])
+        
+        if res == None:
+            return resp, 403
+        
+        token, expiration_date = res
+
+        resp.set_cookie(key='pebune_token',
+            value=token,
+            expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
+            httponly=False)
+
+        print(datetime.datetime.now())
+        print(expiration_date)
+
+        return resp, 200
+    except Exception as e:
+        resp = app.response_class(
+            response=json.dumps(
+                {
+                    'error' : str(e)
+                }
+            ),
+            mimetype='application/json'
+        )
+
+        return resp, 400
 
 if __name__ == '__main__':
     try:
