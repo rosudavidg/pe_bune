@@ -34,8 +34,14 @@ CREATE TABLE activations (
 );
 
 -- Crearea tabelei pentru intrebari
-
--- Crearea tabelei pentru raspunsuri
+CREATE TABLE quizzes (
+    id int AUTO_INCREMENT,
+    question varchar(256) NOT NULL,
+    correct_answer varchar(256) NOT NULL,
+    wrong_answer_1 varchar(256) NOT NULL,
+    wrong_answer_2 varchar(256) NOT NULL,
+    PRIMARY KEY (id)
+);
 
 -- Crearea tabelei pentru log-uri
 

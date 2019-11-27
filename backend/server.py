@@ -1,10 +1,11 @@
 from flask import Flask
-from flask import render_template, make_response, request, json
+from flask import render_template, make_response, request, json, send_from_directory
 import json
 import connexion
 import database
 import datetime
 import time
+import os
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -12,9 +13,45 @@ app.secret_key = "dabumts secret key"
 CORS(app, supports_credentials=True)
 config = None
 
-@app.route('/')
+@app.route('/home', methods=['POST', 'GET'])
 def home():
-    return render_template('home.html')
+    try:
+        username = request.form['username']
+        password = request.form['password']
+        print(username)
+        res = database.DB().login(username, password)
+        
+        if res == None:
+            return resp, 403
+        
+        token, expiration_date = res
+        print(token)
+        resp = make_response(render_template('home.html', result=request.form))
+
+        resp.set_cookie(key='pebune_token',
+            value=token,
+            expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
+            httponly=False)
+
+        return resp, 200
+    except Exception as e:
+        return render_template('login.html'), 200
+
+    # print(request.form)
+    return render_template('home.html', result=request.form)
+
+@app.route('/login')
+def web_login():
+    return render_template('login.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'templates'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -106,9 +143,6 @@ def login():
             value=token,
             expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
             httponly=False)
-
-        print(datetime.datetime.now())
-        print(expiration_date)
 
         return resp, 200
     except Exception as e:
