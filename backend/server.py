@@ -16,16 +16,23 @@ config = None
 @app.route('/home', methods=['POST', 'GET'])
 def home():
     try:
+        # TODO: Check if user is logged in
+        if request.cookies['pebune_token']:
+            data = database.DB().get_quizzes()
+            resp = make_response(render_template('home.html', result=data))
+            return resp, 200
+
+
+        # Check if user just logged in
         username = request.form['username']
         password = request.form['password']
-        print(username)
+
         res = database.DB().login(username, password)
         
         if res == None:
-            return resp, 403
+            return render_template('login.html', result=request.form), 403
         
         token, expiration_date = res
-        print(token)
         resp = make_response(render_template('home.html', result=request.form))
 
         resp.set_cookie(key='pebune_token',
@@ -33,8 +40,52 @@ def home():
             expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
             httponly=False)
 
+        # Compute quizzes
+        data = database.DB().get_quizzes()
+        resp = make_response(render_template('home.html', result=data))
+
         return resp, 200
     except Exception as e:
+        print(e)
+        return render_template('login.html'), 200
+
+    # print(request.form)
+    return render_template('home.html', result=request.form)
+
+@app.route('/delete', methods=['POST', 'GET'])
+def web_delete():
+    try:
+        question_id = request.form['question_id']
+
+        database.DB().delete_quiz(question_id)
+
+        data = database.DB().get_quizzes()
+        resp = make_response(render_template('home.html', result=data))
+
+        return resp, 200
+    except Exception as e:
+        print(e)
+        return render_template('login.html'), 200
+
+    # print(request.form)
+    return render_template('home.html', result=request.form)
+
+@app.route('/add', methods=['POST', 'GET'])
+def web_add():
+    try:
+        question = request.form['question']
+        correct_answer = request.form['correct_answer']
+        wrong_answer_1 = request.form['wrong_answer_1']
+        wrong_answer_2 = request.form['wrong_answer_2']
+
+        database.DB().add_quiz(question, correct_answer, wrong_answer_1, wrong_answer_2)
+
+        data = database.DB().get_quizzes()
+        resp = make_response(render_template('home.html', result=data))
+
+        return resp, 200
+    except Exception as e:
+        print(e)
         return render_template('login.html'), 200
 
     # print(request.form)
@@ -42,6 +93,10 @@ def home():
 
 @app.route('/login')
 def web_login():
+    return render_template('login.html')
+
+@app.route('/')
+def web_root():
     return render_template('login.html')
 
 @app.route('/favicon.ico')

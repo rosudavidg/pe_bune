@@ -4,21 +4,170 @@
 <head>
     <meta charset="UTF-8">
     <title>PE BUNE?!</title>
+    <style>
+        div.flex-container {
+            display: flex;
+            background-color: #292d40;
+            position: fixed;
+            padding: 0;
+            margin: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            flex-direction: row;
+            align-content: center;
+            color: #ffebcd;
+            font: 18px/1.5 "Dosis", sans-serif;
+        }
+
+        div.left {
+            display: flex;
+            width: 50%;
+        }
+
+        div.right {
+            display: flex;
+            width: 50%;
+            flex-direction: row;
+        }
+
+        div.right-left {
+            display: flex;
+            width: 20%;
+        }
+
+        div.right-right {
+            display: flex;
+            width: 20%;
+        }
+
+        div.right-middle {
+            display: flex;
+            width: 60%;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        div.right-middle-top {
+            display: flex;
+            height: 30%;
+        }
+
+        div.right-middle-bottom {
+            display: flex;
+            height: 70%;
+            flex-direction: column;
+        }
+
+        #textboxid {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            border-bottom: 2px solid red;
+            background: #292d40;
+            color: #ffebcd;
+        }
+
+        #button {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            align-self: center;
+            background: #292d40;
+            color: #ffebcd;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            align-self: center;
+            background: #292d40;
+            color: #ffebcd;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            font: 14px/1.5 "Dosis", sans-serif;
+        }
+
+        td,
+        th {
+            border: 1px solid #222222;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #222222;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>
-        © Gabriel-David Rosu 2019
-    </h2>
+    <div class="flex-container">
+        <div class="left" style="overflow-y: scroll;">
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Question</th>
+                    <th>Correct answer</th>
+                    <th>Other anwser</th>
+                    <th>Other answer</th>
+                    <th>Action</th>
+                </tr>
+                {% for id, quizz in result.items() %}
+                <tr>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="question_id" value="{{ id }}"></input>
+                        <td> {{ id }} </td>
+                        <td> {{ quizz['question'] }} </td>
+                        <td> {{ quizz['correct_answer'] }} </td>
+                        <td> {{ quizz['other_answer_1'] }} </td>
+                        <td> {{ quizz['other_answer_2'] }} </td>
+                        <td><button value="submit" type="submit" type="button" size=20>DELETE</button></td>
+                    </form>
 
-    <!-- <table border=1>
-        {% for key, value in result.items() %}
-        <tr>
-            <th> {{ key }} </th>
-            <td> {{ value }} </td>
-        </tr>
-        {% endfor %}
-    </table> -->
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="right">
+            <div class="right-left">
+            </div>
+            <div class="right-middle">
+                <div class="right-middle-top">
+                </div>
+                <div class="right-middle-bottom">
+                    <form action="/add" method="post">
+                        <input name="question" id="textboxid" type="text" size=20 placeholder="Intrebare"
+                            style="border-color:whitesmoke" />
+                        <input name="correct_answer" id="textboxid" type="text" size=20 placeholder="Raspunsul corect"
+                            style="border-color:green" />
+                        <input name="wrong_answer_1" id="textboxid" type="text" size=20 placeholder="Alta varianta" />
+                        <input name="wrong_answer_2" id="textboxid" type="text" size=20 placeholder="Alta varianta" />
+                        <button value="submit" type="submit" id="button" type="button" size=20>Adauga</button>
+                    </form>
+                </div>
+            </div>
+            <div class="right-right">
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

@@ -98,3 +98,47 @@ class DB():
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
+
+    def get_quizzes(self):
+        try:
+            cursor = self.db.cursor()
+            cursor.callproc('select_quizzes')
+
+            ans = []
+            d = {}
+
+            for result in cursor.stored_results():
+                ans += result.fetchall()
+            
+            for a in ans:
+                d[a[0]] = {
+                    'question': a[1],
+                    'correct_answer': a[2],
+                    'other_answer_1': a[3],
+                    'other_answer_2': a[4]
+                }
+
+            return d
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+        
+    def delete_quiz(self, id):
+        try:
+            cursor = self.db.cursor()
+            cursor.callproc('delete_quiz', (id, ))
+
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+
+    def add_quiz(self, question, correct_answer, other_answer_1, other_answer_2):
+        try:
+            cursor = self.db.cursor()
+            cursor.callproc('add_quiz', (question, correct_answer, other_answer_1, other_answer_2))
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()

@@ -137,3 +137,41 @@ BEGIN
     COMMIT;
 END //
 DELIMITER ;
+
+-- Procedura pentru selectarea tuturor intrebarilor
+DELIMITER //
+CREATE PROCEDURE select_quizzes ()
+BEGIN
+    SELECT * FROM quizzes
+    ;
+END //
+DELIMITER ;
+
+-- Procedura pentru stergerea unei intrebari dupa id
+DELIMITER //
+CREATE PROCEDURE delete_quiz (
+    IN id integer)
+BEGIN
+    DELETE
+        FROM quizzes q
+        WHERE q.id = id
+    ;
+    COMMIT;
+END //
+DELIMITER ;
+
+-- Procedura pentru adaugarea unei intrebari
+DELIMITER //
+CREATE PROCEDURE add_quiz (
+    IN in_question varchar(256),
+    IN in_correct_answer varchar(256),
+    IN in_wrong_answer_1 varchar(256),
+    IN in_wrong_answer_2 varchar(256))
+BEGIN
+    INSERT
+        INTO quizzes(question, correct_answer, wrong_answer_1, wrong_answer_2)
+        VALUES(in_question, in_correct_answer, in_wrong_answer_1, in_wrong_answer_2)
+    ;
+    COMMIT;
+END //
+DELIMITER ;
