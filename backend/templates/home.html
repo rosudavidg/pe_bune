@@ -129,15 +129,15 @@
                     <th>Other answer</th>
                     <th>Action</th>
                 </tr>
-                {% for id, quizz in result.items() %}
+                {% for id, quiz in result.items() %}
                 <tr>
                     <form action="/delete" method="post">
                         <input type="hidden" name="question_id" value="{{ id }}"></input>
                         <td> {{ id }} </td>
-                        <td> {{ quizz['question'] }} </td>
-                        <td> {{ quizz['correct_answer'] }} </td>
-                        <td> {{ quizz['other_answer_1'] }} </td>
-                        <td> {{ quizz['other_answer_2'] }} </td>
+                        <td> {{ quiz['question'] }} </td>
+                        <td> {{ quiz['correct_answer'] }} </td>
+                        <td> {{ quiz['other_answer_1'] }} </td>
+                        <td> {{ quiz['other_answer_2'] }} </td>
                         <td><button value="submit" type="submit" type="button" size=20>DELETE</button></td>
                     </form>
 
@@ -164,6 +164,9 @@
                 </div>
             </div>
             <div class="right-right">
+                <form action="/logout" method="post">
+                    <button value="submit" type="submit" id="button" type="button" size=20>LOG OUT</button>
+                </form>
             </div>
         </div>
     </div>

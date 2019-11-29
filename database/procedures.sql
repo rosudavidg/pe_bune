@@ -175,3 +175,35 @@ BEGIN
     COMMIT;
 END //
 DELIMITER ;
+
+-- Procedura pentru verificarea unei sesiuni
+DELIMITER //
+CREATE PROCEDURE check_token (
+    IN in_token varchar(256),
+    OUT out_valid boolean)
+BEGIN
+    DECLARE counter integer;
+    DECLARE dt datetime;
+
+    SELECT
+        COUNT(*), expiration_date
+    INTO
+        counter, dt
+    FROM
+        sessions
+    WHERE
+        token = in_token
+    ;
+
+    IF counter = 1 THEN
+        IF sysdate() < dt THEN
+            SET out_valid = true;
+        ELSE
+            SET out_valid = false;
+            END IF;
+    ELSE
+        SET out_valid = false;
+    END IF;
+
+END //
+DELIMITER ;

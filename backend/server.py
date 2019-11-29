@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, make_response, request, json, send_from_directory
+from flask import render_template, make_response, request, json, send_from_directory, redirect, url_for
 import json
 import connexion
 import database
@@ -16,29 +16,36 @@ config = None
 @app.route('/home', methods=['POST', 'GET'])
 def home():
     try:
-        # TODO: Check if user is logged in
-        if request.cookies['pebune_token']:
+        if request.form != None and 'username' in request.form and 'password' in request.form:
+            # Check if user just logged in
+            username = request.form['username']
+            password = request.form['password']
+
+            res = database.DB().login(username, password)
+            
+            # Log in - fail
+            if res == None:
+                return render_template('login.html', result=request.form), 403
+            
+            # Log in - success
+            token, expiration_date = res
+            print('new token')
+            print(token)
             data = database.DB().get_quizzes()
             resp = make_response(render_template('home.html', result=data))
+
+            resp.set_cookie(key='pebune_token',
+                value=token,
+                expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
+                httponly=False)
+            
             return resp, 200
+        else:
+            # Check if user is logged in
+            username = database.DB().is_user_logged_in(request)
 
-
-        # Check if user just logged in
-        username = request.form['username']
-        password = request.form['password']
-
-        res = database.DB().login(username, password)
-        
-        if res == None:
-            return render_template('login.html', result=request.form), 403
-        
-        token, expiration_date = res
-        resp = make_response(render_template('home.html', result=request.form))
-
-        resp.set_cookie(key='pebune_token',
-            value=token,
-            expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
-            httponly=False)
+            if username == None:
+                return render_template('login.html', result=request.form), 403
 
         # Compute quizzes
         data = database.DB().get_quizzes()
@@ -46,11 +53,20 @@ def home():
 
         return resp, 200
     except Exception as e:
-        print(e)
-        return render_template('login.html'), 200
+        return render_template('login.html'), 400
 
-    # print(request.form)
     return render_template('home.html', result=request.form)
+
+@app.route('/logout', methods=['POST', 'GET'])
+def web_logout():
+    resp = make_response(render_template('login.html'))
+
+    resp.set_cookie(key='pebune_token',
+        value='',
+        expires=0,
+        httponly=False)
+
+    return resp, 200
 
 @app.route('/delete', methods=['POST', 'GET'])
 def web_delete():
@@ -60,15 +76,11 @@ def web_delete():
         database.DB().delete_quiz(question_id)
 
         data = database.DB().get_quizzes()
-        resp = make_response(render_template('home.html', result=data))
 
-        return resp, 200
+        return redirect(url_for('home'))
+
     except Exception as e:
-        print(e)
-        return render_template('login.html'), 200
-
-    # print(request.form)
-    return render_template('home.html', result=request.form)
+        return render_template('login.html'), 400
 
 @app.route('/add', methods=['POST', 'GET'])
 def web_add():
@@ -81,15 +93,11 @@ def web_add():
         database.DB().add_quiz(question, correct_answer, wrong_answer_1, wrong_answer_2)
 
         data = database.DB().get_quizzes()
-        resp = make_response(render_template('home.html', result=data))
-
-        return resp, 200
+        return redirect(url_for('home'))
     except Exception as e:
-        print(e)
         return render_template('login.html'), 200
 
-    # print(request.form)
-    return render_template('home.html', result=request.form)
+    # return render_template('home.html', result=request.form)
 
 @app.route('/login')
 def web_login():

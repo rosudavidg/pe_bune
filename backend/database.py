@@ -142,3 +142,33 @@ class DB():
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
+    
+    def token_is_valid(self, token):
+        try:
+            cursor = self.db.cursor()
+            is_valid = cursor.callproc('check_token', (token, ''))[1]
+
+            print(is_valid)
+            print(token)
+
+            if is_valid == True:
+                print(token.split(':')[0])
+                return token.split(':')[0]
+            return None
+        except Exception as e:
+            print(e)
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+
+    def is_user_logged_in(self, request):
+        if request == None:
+            return None
+        if request.cookies == None:
+            return None
+        if 'pebune_token' not in request.cookies:
+            return None
+        
+        token = request.cookies['pebune_token']
+
+        return self.token_is_valid(token)
