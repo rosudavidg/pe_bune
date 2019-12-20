@@ -15,6 +15,7 @@ CREATE TABLE users (
     experience int NOT NULL,
     created_date datetime NOT NULL,
     activated BOOLEAN NOT NULL,
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (username)
 );
 
@@ -36,6 +37,7 @@ CREATE TABLE activations (
 -- Crearea tabelei pentru intrebari
 CREATE TABLE quizzes (
     id int AUTO_INCREMENT,
+    category varchar(256) NOT NULL,
     question varchar(256) NOT NULL,
     correct_answer varchar(256) NOT NULL,
     wrong_answer_1 varchar(256) NOT NULL,

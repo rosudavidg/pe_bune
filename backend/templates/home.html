@@ -123,6 +123,7 @@
             <table>
                 <tr>
                     <th>Id</th>
+                    <th>Category</th>
                     <th>Question</th>
                     <th>Correct answer</th>
                     <th>Other anwser</th>
@@ -134,13 +135,13 @@
                     <form action="/delete" method="post">
                         <input type="hidden" name="question_id" value="{{ id }}"></input>
                         <td> {{ id }} </td>
+                        <td> {{ quiz['category'] }} </td>
                         <td> {{ quiz['question'] }} </td>
                         <td> {{ quiz['correct_answer'] }} </td>
                         <td> {{ quiz['other_answer_1'] }} </td>
                         <td> {{ quiz['other_answer_2'] }} </td>
                         <td><button value="submit" type="submit" type="button" size=20>DELETE</button></td>
                     </form>
-
                 </tr>
                 {% endfor %}
             </table>
@@ -153,13 +154,15 @@
                 </div>
                 <div class="right-middle-bottom">
                     <form action="/add" method="post">
+                        <input name="category" id="textboxid" type="text" size=20 placeholder="Categorie"
+                            style="border-color:whitesmoke" />
                         <input name="question" id="textboxid" type="text" size=20 placeholder="Intrebare"
                             style="border-color:whitesmoke" />
                         <input name="correct_answer" id="textboxid" type="text" size=20 placeholder="Raspunsul corect"
                             style="border-color:green" />
                         <input name="wrong_answer_1" id="textboxid" type="text" size=20 placeholder="Alta varianta" />
                         <input name="wrong_answer_2" id="textboxid" type="text" size=20 placeholder="Alta varianta" />
-                        <button value="submit" type="submit" id="button" type="button" size=20>Adauga</button>
+                        <button value="submit" type="submit" id="button" type="button" size=20>Add</button>
                     </form>
                 </div>
             </div>

@@ -32,10 +32,10 @@ class DB():
             auth_plugin='mysql_native_password'
         )
 
-    def add_quiz(self, question, correct_answer, wrong_answer_1, wrong_answer_2):
+    def add_quiz(self, category, question, correct_answer, wrong_answer_1, wrong_answer_2):
         try: 
             cursor = self.db.cursor()
-            cursor.callproc('add_quiz', [question, correct_answer, wrong_answer_1, wrong_answer_2])
+            cursor.callproc('add_quiz', [category, question, correct_answer, wrong_answer_1, wrong_answer_2])
         except Exception as e:
             raise Exception('Cannot add quiz!')
         finally:
@@ -54,12 +54,9 @@ def add_quiz(db, quiz):
     correct_answer = quiz['correct_answer']
     wrong_answer_1 = quiz['wrong_answer_1']
     wrong_answer_2 = quiz['wrong_answer_2']
-    
-    # TODO: add category in database
     category = quiz['category']
 
-    db.add_quiz(question, correct_answer, wrong_answer_1, wrong_answer_2)
-
+    db.add_quiz(category, question, correct_answer, wrong_answer_1, wrong_answer_2)
 
 
 if __name__ == '__main__':

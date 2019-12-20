@@ -36,7 +36,6 @@ class DB():
             cursor = self.db.cursor()
             cursor.callproc('create_user', [username, security.encrypt_password(password), email, first_name, last_name, security.activation_token()])
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
@@ -48,7 +47,6 @@ class DB():
 
             email_module.send_activation_link(email, token)
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
@@ -61,7 +59,6 @@ class DB():
             
             return confirmed
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
@@ -112,10 +109,11 @@ class DB():
             
             for a in ans:
                 d[a[0]] = {
-                    'question': a[1],
-                    'correct_answer': a[2],
-                    'other_answer_1': a[3],
-                    'other_answer_2': a[4]
+                    'category' : a[1],
+                    'question': a[2],
+                    'correct_answer': a[3],
+                    'other_answer_1': a[4],
+                    'other_answer_2': a[5]
                 }
 
             return d
@@ -134,10 +132,10 @@ class DB():
         finally:
             cursor.close()
 
-    def add_quiz(self, question, correct_answer, other_answer_1, other_answer_2):
+    def add_quiz(self, category, question, correct_answer, other_answer_1, other_answer_2):
         try:
             cursor = self.db.cursor()
-            cursor.callproc('add_quiz', (question, correct_answer, other_answer_1, other_answer_2))
+            cursor.callproc('add_quiz', (category, question, correct_answer, other_answer_1, other_answer_2))
         except Exception as e:
             raise Exception(error.Error.new(e))
         finally:
@@ -148,15 +146,10 @@ class DB():
             cursor = self.db.cursor()
             is_valid = cursor.callproc('check_token', (token, ''))[1]
 
-            print(is_valid)
-            print(token)
-
             if is_valid == True:
-                print(token.split(':')[0])
                 return token.split(':')[0]
             return None
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
@@ -172,3 +165,17 @@ class DB():
         token = request.cookies['pebune_token']
 
         return self.token_is_valid(token)
+
+    def is_user_admin(self, username):
+        print('none')
+        if username == None:
+            return None
+        
+        try:
+            cursor = self.db.cursor()
+            print('hi')
+            return cursor.callproc('is_user_admin', (username, ''))[1]
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()

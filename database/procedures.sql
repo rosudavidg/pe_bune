@@ -12,7 +12,17 @@ CREATE PROCEDURE create_user (
     IN token varchar(64))
 BEGIN
     INSERT
-        INTO users
+        INTO users (
+            username,
+            password,
+            email,
+            first_name,
+            last_name,
+            level,
+            experience,
+            created_date,
+            activated
+        )
         VALUES (
             username,
             password,
@@ -163,14 +173,15 @@ DELIMITER ;
 -- Procedura pentru adaugarea unei intrebari
 DELIMITER //
 CREATE PROCEDURE add_quiz (
+    IN in_category varchar(256),
     IN in_question varchar(256),
     IN in_correct_answer varchar(256),
     IN in_wrong_answer_1 varchar(256),
     IN in_wrong_answer_2 varchar(256))
 BEGIN
     INSERT
-        INTO quizzes(question, correct_answer, wrong_answer_1, wrong_answer_2)
-        VALUES(in_question, in_correct_answer, in_wrong_answer_1, in_wrong_answer_2)
+        INTO quizzes(category, question, correct_answer, wrong_answer_1, wrong_answer_2)
+        VALUES(in_category, in_question, in_correct_answer, in_wrong_answer_1, in_wrong_answer_2)
     ;
     COMMIT;
 END //
@@ -205,5 +216,28 @@ BEGIN
         SET out_valid = false;
     END IF;
 
+END //
+DELIMITER ;
+
+-- Procedura primeste username-ul si intoarce daca contul este admin sau nu
+DELIMITER //
+CREATE PROCEDURE is_user_admin (
+    IN in_username varchar(64),
+    OUT out_is_admin boolean)
+BEGIN
+    DECLARE counter integer;
+
+    SELECT
+        COUNT(*) INTO counter
+        FROM users
+        WHERE username = in_username
+        AND is_admin = TRUE
+    ;
+
+    IF counter = 1 THEN
+        SET out_is_admin = TRUE;
+    ELSE
+        SET out_is_admin = FALSE;
+    END IF;
 END //
 DELIMITER ;

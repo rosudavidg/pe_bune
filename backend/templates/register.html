@@ -85,7 +85,7 @@
             color: #ffebcd;
         }
 
-        #loginbutton {
+        #registerbutton {
             height: 30px;
             font-size: 14pt;
             width: 100%;
@@ -98,7 +98,7 @@
             cursor: pointer;
         }
 
-        #registerbutton {
+        #backtologinbutton {
             height: 30px;
             font-size: 12pt;
             width: 100%;
@@ -124,14 +124,21 @@
                 </div>
                 <div class="middle-right-bottom">
                     <div class="middle-right-bottom-left">
-                        <form action="/login" method="post">
-                            <input name="username" id="textboxid" type="text" size=20 placeholder="Username" />
-                            <input name="password" id="textboxid" type="password" size=20 placeholder="Password" />
-                            <button value="submit" type="submit" id="loginbutton" type="button" size=20>LOG IN</button>
-                        </form>
                         <form action="/register" method="post">
-                            <button value="submit" type="submit" id="registerbutton" type="button" size=20>Create an
-                                account</button>
+                            <input name="firstname" id="textboxid" type="text" size=20 placeholder="First name" />
+                            <input name="lastname" id="textboxid" type="text" size=20 placeholder="Last name" />
+                            <input name="username" id="textboxid" type="text" size=20 placeholder="Username" />
+                            <input name="password1" id="textboxid" type="password" size=20 placeholder="Password" />
+                            <input name="password2" id="textboxid" type="password" size=20
+                                placeholder="Repeat password" />
+                            <input name="email" id="textboxid" type="text" size=20 placeholder="Email" />
+                            <button value="submit" type="submit" id="registerbutton" type="button"
+                                size=20>REGISTER</button>
+                        </form>
+                        <form action="/login" method="post">
+                            <button value="submit" type="submit" id="backtologinbutton" type="button" size=20>Back
+                                to
+                                login</button>
                         </form>
                     </div>
                     <div class="middle-right-bottom-right">

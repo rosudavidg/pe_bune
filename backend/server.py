@@ -16,42 +16,24 @@ config = None
 @app.route('/home', methods=['POST', 'GET'])
 def home():
     try:
-        if request.form != None and 'username' in request.form and 'password' in request.form:
-            # Check if user just logged in
-            username = request.form['username']
-            password = request.form['password']
+        # Check if user is logged in
+        username = database.DB().is_user_logged_in(request)
 
-            res = database.DB().login(username, password)
-            
-            # Log in - fail
-            if res == None:
-                return render_template('login.html', result=request.form), 403
-            
-            # Log in - success
-            token, expiration_date = res
-            print('new token')
-            print(token)
+        if username == None:
+            return redirect('/login')
+
+        # If user is admin
+        if database.DB().is_user_admin(username):
+            # Compute quizzes
             data = database.DB().get_quizzes()
             resp = make_response(render_template('home.html', result=data))
 
-            resp.set_cookie(key='pebune_token',
-                value=token,
-                expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
-                httponly=False)
-            
             return resp, 200
-        else:
-            # Check if user is logged in
-            username = database.DB().is_user_logged_in(request)
-
-            if username == None:
-                return render_template('login.html', result=request.form), 403
-
-        # Compute quizzes
-        data = database.DB().get_quizzes()
-        resp = make_response(render_template('home.html', result=data))
-
-        return resp, 200
+        
+        # TODO:
+        # If user is not admin
+        return 'Welcome', 404
+        
     except Exception as e:
         return render_template('login.html'), 400
 
@@ -59,14 +41,14 @@ def home():
 
 @app.route('/logout', methods=['POST', 'GET'])
 def web_logout():
-    resp = make_response(render_template('login.html'))
+    resp = make_response(redirect('/login'))
 
     resp.set_cookie(key='pebune_token',
         value='',
         expires=0,
         httponly=False)
 
-    return resp, 200
+    return resp
 
 @app.route('/delete', methods=['POST', 'GET'])
 def web_delete():
@@ -85,12 +67,13 @@ def web_delete():
 @app.route('/add', methods=['POST', 'GET'])
 def web_add():
     try:
+        category = request.form['category']
         question = request.form['question']
         correct_answer = request.form['correct_answer']
         wrong_answer_1 = request.form['wrong_answer_1']
         wrong_answer_2 = request.form['wrong_answer_2']
 
-        database.DB().add_quiz(question, correct_answer, wrong_answer_1, wrong_answer_2)
+        database.DB().add_quiz(category, question, correct_answer, wrong_answer_1, wrong_answer_2)
 
         data = database.DB().get_quizzes()
         return redirect(url_for('home'))
@@ -99,13 +82,47 @@ def web_add():
 
     # return render_template('home.html', result=request.form)
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def web_login():
+    try:
+        # Check if user is logged in
+        if database.DB().is_user_logged_in(request) != None:
+            return redirect('/home')
+
+        # Check for credentials
+        if request.form != None and 'username' in request.form and 'password' in request.form:
+            # Check if user just logged in
+            username = request.form['username']
+            password = request.form['password']
+
+            res = database.DB().login(username, password)
+            
+            # Log in - failed
+            if res == None:
+                return render_template('login.html', result=request.form), 403
+            
+            # Log in - success
+            token, expiration_date = res
+            resp = make_response(redirect('/home'))
+
+            resp.set_cookie(key='pebune_token',
+                value=token,
+                expires=datetime.datetime.strptime(expiration_date, '%Y-%m-%d %H:%M:%S'),
+                httponly=False)
+            
+            return resp
+    except Exception as e:
+        return render_template('login.html'), 400
+
     return render_template('login.html')
+
+@app.route('/register', methods=['POST', 'GET'])
+def web_register():
+    return render_template('register.html'), 200
 
 @app.route('/')
 def web_root():
-    return render_template('login.html')
+    return redirect('/login')
 
 @app.route('/favicon.ico')
 def favicon():
