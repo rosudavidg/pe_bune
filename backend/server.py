@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import render_template, make_response, request, json, send_from_directory, redirect, url_for
 import json
-import connexion
 import database
 import datetime
 import time
