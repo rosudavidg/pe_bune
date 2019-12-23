@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, make_response, request, json, send_from_directory, redirect, url_for
+from flask import render_template, make_response, request, json, send_from_directory, redirect, url_for, session, flash
 import json
 import database
 import datetime
@@ -116,8 +116,52 @@ def web_login():
     return render_template('login.html')
 
 @app.route('/register', methods=['POST', 'GET'])
-def web_register():
+def web_register(errors=[]):
+
+    if request.method == "POST":
+        errors = False
+
+        username = request.form['username']
+        password1 = request.form['password1']
+        password2 = request.form['password2']
+        email = request.form['email']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+
+        if len(username) < 8:
+            errors = True
+            flash("Username must be at least 8 characters", "warning")
+
+        if len(password1) < 8:
+            errors = True
+            flash("Password must be at least 8 characters", "warning")
+
+        if password1 != password2:
+            errors = True
+            flash("Passwords differ", "warning")
+
+        if errors:
+            return render_template('register.html', result=request.form), 200
+
+        try:
+            database.DB().register(username,
+                password1,
+                email,
+                firstname,
+                lastname)
+            
+            database.DB().send_activation_link(email)
+
+            return redirect('register/success')
+        except Exception as e:
+            flash("Registration failed.", "warning")
+            return redirect(request.url)
+
     return render_template('register.html'), 200
+
+@app.route('/register/success', methods=['POST', 'GET'])
+def web_register_success():
+    return render_template('registration_success.html'), 200
 
 @app.route('/')
 def web_root():

@@ -14,7 +14,7 @@ def send_activation_link(to_email=1, token=1):
     Here is your activation link:\n
     %s\n\n
     David
-    """ % ('https://localhost:4242/api/confirm/' + token)
+    """ % ('https://www.pebune.davidrosu.tech/api/confirm/' + token)
 
     email_text = '\r\n'.join(['To: %s' % ','.join(to),
                     'From: %s' % sent_from,

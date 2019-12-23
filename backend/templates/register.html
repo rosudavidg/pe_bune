@@ -23,6 +23,7 @@
 
         div.top-container {
             display: flex;
+            flex-direction: column;
             height: 10%;
         }
 
@@ -45,7 +46,7 @@
 
         div.middle-right-top {
             display: flex;
-            height: 30%;
+            height: 10%;
         }
 
         div.middle-right-bottom {
@@ -65,6 +66,8 @@
 
         div.middle-right-bottom-right {
             display: flex;
+            flex-direction: column;
+            align-content: center;
             width: 60%;
             height: 100%;
         }
@@ -115,7 +118,9 @@
 
 <body>
     <div class="flex-container">
-        <div class="top-container"></div>
+        <div class="top-container">
+
+        </div>
         <div class="middle-container">
             <div class="middle-left">
             </div>
@@ -124,7 +129,17 @@
                 </div>
                 <div class="middle-right-bottom">
                     <div class="middle-right-bottom-left">
-                        <form action="/register" method="post">
+
+                        <form action="/register" method="post"> {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div style="width:100%; display: flex; flex-direction: column;text-align: center;"
+                                class="alert alert-primary alert-dismissible fade show" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
                             <input name="firstname" id="textboxid" type="text" size=20 placeholder="First name" />
                             <input name="lastname" id="textboxid" type="text" size=20 placeholder="Last name" />
                             <input name="username" id="textboxid" type="text" size=20 placeholder="Username" />
@@ -142,6 +157,7 @@
                         </form>
                     </div>
                     <div class="middle-right-bottom-right">
+
                     </div>
                 </div>
             </div>
