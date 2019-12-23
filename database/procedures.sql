@@ -47,7 +47,7 @@ DELIMITER ;
 -- Procedura de activare a unui utilizator
 DELIMITER //
 CREATE PROCEDURE confirm_user (
-    IN token varchar(64),
+    IN in_token varchar(64),
     OUT out_ans boolean)
 BEGIN
 
@@ -55,8 +55,8 @@ BEGIN
 
     IF out_ans = TRUE THEN
         DELETE
-            FROM activations a
-            WHERE a.token = token
+            FROM activations
+            WHERE token = in_token
         ;
         COMMIT;
     END IF;
@@ -138,11 +138,11 @@ DELIMITER ;
 -- Procedura pentru stergea sesiunilor active, atunci cand una este adaugata
 DELIMITER //
 CREATE PROCEDURE delete_sessions (
-    IN username varchar(64))
+    IN in_username varchar(64))
 BEGIN
     DELETE
-        FROM sessions s
-        WHERE s.username = username
+        FROM sessions
+        WHERE username = in_username
     ;
     COMMIT;
 END //
@@ -160,11 +160,11 @@ DELIMITER ;
 -- Procedura pentru stergerea unei intrebari dupa id
 DELIMITER //
 CREATE PROCEDURE delete_quiz (
-    IN id integer)
+    IN in_id integer)
 BEGIN
     DELETE
-        FROM quizzes q
-        WHERE q.id = id
+        FROM quizzes
+        WHERE id = in_id
     ;
     COMMIT;
 END //
