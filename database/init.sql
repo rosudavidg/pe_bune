@@ -48,3 +48,19 @@ CREATE TABLE quizzes (
 -- Crearea tabelei pentru log-uri
 
 -- Crearea tabelei pentru meciuri
+CREATE TABLE games (
+    id int AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    finished BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE games_quizzes (
+    id int AUTO_INCREMENT,
+    game_id int NOT NULL,
+    username varchar(64) NOT NULL,
+    quiz_id int NOT NULL,
+    answered BOOLEAN NOT NULL DEFAULT FALSE,
+    score int NOT NULL,
+    PRIMARY KEY (id)
+);
