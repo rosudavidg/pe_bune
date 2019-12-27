@@ -4,6 +4,7 @@ import json
 import error
 import mysql.connector
 import email_module
+from models.user import User
 
 class DB():
     def __init__(self):
@@ -179,3 +180,12 @@ class DB():
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
+
+    def get_user(self, username):
+        cursor = self.db.cursor()
+
+        res = cursor.callproc('get_user', (username, '', '', '', '', ''))
+        
+        user = User(username, res[2], res[3], res[1], res[4], res[5])
+        
+        return user

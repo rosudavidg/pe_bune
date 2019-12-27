@@ -6,6 +6,7 @@ import datetime
 import time
 import os
 from flask_cors import CORS
+from models.user import User
 
 app = Flask(__name__)
 app.secret_key = "dabumts secret key"
@@ -25,13 +26,14 @@ def home():
         if database.DB().is_user_admin(username):
             # Compute quizzes
             data = database.DB().get_quizzes()
-            resp = make_response(render_template('home.html', result=data))
+            resp = make_response(render_template('home_admin.html', result=data))
 
             return resp, 200
         
         # TODO:
         # If user is not admin
-        return 'Welcome', 404
+        user = database.DB().get_user('rosudavidg')
+        return make_response(render_template('home_user.html', result=user)), 200
         
     except Exception as e:
         return render_template('login.html'), 400

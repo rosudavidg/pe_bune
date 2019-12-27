@@ -51,7 +51,7 @@ CREATE PROCEDURE confirm_user (
     OUT out_ans boolean)
 BEGIN
 
-    SELECT activation_token_exists(token) INTO out_ans;
+    SELECT activation_token_exists(in_token) INTO out_ans;
 
     IF out_ans = TRUE THEN
         DELETE
@@ -239,5 +239,25 @@ BEGIN
     ELSE
         SET out_is_admin = FALSE;
     END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE get_user (
+    IN in_username varchar(64),
+    OUT out_email varchar(256),
+    OUT out_firstname varchar(256),
+    OUT out_lastname varchar(256),
+    OUT out_level int,
+    OUT out_experience int)
+BEGIN
+
+    SELECT
+            email, first_name, last_name, level, experience
+        INTO
+            out_email, out_firstname, out_lastname, out_level, out_experience
+        FROM users
+        WHERE username = in_username
+    ;
 END //
 DELIMITER ;
