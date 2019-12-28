@@ -61,6 +61,7 @@ CREATE TABLE games_quizzes (
     username varchar(64) NOT NULL,
     quiz_id int NOT NULL,
     answered BOOLEAN NOT NULL DEFAULT FALSE,
-    score int NOT NULL,
+    correct BOOLEAN NOT NULL DEFAULT FALSE,
+    score int NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );

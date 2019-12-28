@@ -32,13 +32,67 @@ def home():
         
         # TODO:
         # If user is not admin
-        user = database.DB().get_user('rosudavidg')
+        user = database.DB().get_user(username)
         return make_response(render_template('home_user.html', result=user)), 200
         
     except Exception as e:
         return render_template('login.html'), 400
 
     return render_template('home.html', result=request.form)
+
+@app.route('/game', methods=['POST', 'GET'])
+def game():
+    try:
+        username = database.DB().is_user_logged_in(request)
+
+        if username == None:
+            return redirect('/login')
+
+        game_id = None
+
+        if database.DB().game_exists(username):
+            game_id = database.DB().get_game_id(username)
+        else:
+            game_id = database.DB().create_game(username)
+        
+        game_quizzes = database.DB().get_game_quizzes(game_id)
+
+        for quiz in game_quizzes:
+            quiz['category'] = database.DB().get_category(quiz['quiz_id'])
+
+        return make_response(render_template('game.html', result=game_quizzes)), 200
+
+    except Exception as e:
+        return render_template('login.html'), 400
+
+    return username, 200
+
+@app.route('/quiz/<quiz_id>', methods=['POST', 'GET'])
+def quiz(quiz_id):
+    try:
+        username = database.DB().is_user_logged_in(request)
+
+        if username == None:
+            return redirect('/login')
+
+        # if database.DB().game_exists(username):
+        #     game_id = database.DB().get_game_id(username)
+        # else:
+        #     game_id = database.DB().create_game(username)
+        
+        # game_quizzes = database.DB().get_game_quizzes(game_id)
+
+        # for quiz in game_quizzes:
+        #     quiz['category'] = database.DB().get_category(quiz['quiz_id'])
+        # return str(), 200
+        e = database.DB().get_quiz(quiz_id)
+
+        return make_response(render_template('quiz.html', result=e)), 200
+
+    except Exception as e:
+        return render_template('login.html'), 400
+
+    return username, 200
 
 @app.route('/logout', methods=['POST', 'GET'])
 def web_logout():

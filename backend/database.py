@@ -168,14 +168,48 @@ class DB():
         return self.token_is_valid(token)
 
     def is_user_admin(self, username):
-        print('none')
         if username == None:
             return None
         
         try:
             cursor = self.db.cursor()
-            print('hi')
             return cursor.callproc('is_user_admin', (username, ''))[1]
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+
+    def game_exists(self, username):
+        if username == None:
+            return None
+        
+        try:
+            cursor = self.db.cursor()
+            return cursor.callproc('game_exists', (username, ''))[1]
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+    
+    def create_game(self, username):
+        if username == None:
+            return None
+        
+        try:
+            cursor = self.db.cursor()
+            return cursor.callproc('create_game', (username, ''))[1]
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+    
+    def get_game_id(self, username):
+        if username == None:
+            return None
+        
+        try:
+            cursor = self.db.cursor()
+            return cursor.callproc('get_game_id', (username, ''))[1]
         except Exception as e:
             raise Exception(error.Error.new(e))
         finally:
@@ -189,3 +223,51 @@ class DB():
         user = User(username, res[2], res[3], res[1], res[4], res[5])
         
         return user
+
+    def get_game_quizzes(self, game_id):
+        try:
+            cursor = self.db.cursor()
+            cursor.callproc('get_game_quizzes', (game_id,))
+
+            ans = []
+            d = []
+
+            for result in cursor.stored_results():
+                ans += result.fetchall()
+            
+            for a in ans:
+                d.append({
+                    'quiz_id' : a[0],
+                    'answered': a[1],
+                    'correct' : a[2]
+                    }
+                )
+
+            return d
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+
+    def get_category(self, quiz_id):
+        try:
+            cursor = self.db.cursor()
+
+            return cursor.callproc('get_category', (quiz_id, ''))[1]
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+    
+    def get_quiz(self, quiz_id):
+        try:
+            cursor = self.db.cursor()
+
+            res = cursor.callproc('get_quiz', (quiz_id, '', '', '', ''))
+            return (res[1], res[2], res[3], res[4])
+        except Exception as e:
+            print(e)
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+    

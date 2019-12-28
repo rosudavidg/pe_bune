@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PE BUNE?!</title>
+    <style>
+        div.flex-container {
+            display: flex;
+            background-color: #292d40;
+            position: fixed;
+            padding: 0;
+            margin: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-content: center;
+            color: #ffebcd;
+            font: 18px/1.5 "Dosis", sans-serif;
+        }
+
+        div.header {
+            display: flex;
+            flex-direction: row;
+            height: 3%;
+        }
+
+        div.top {
+            display: flex;
+            flex-direction: row;
+            height: 10%;
+        }
+
+        div.top-left {
+            display: flex;
+            align-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 15%;
+        }
+
+        div.top-middle {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            width: 70%;
+        }
+
+        div.top-right {
+            display: flex;
+            flex-direction: column;
+            width: 15%;
+        }
+
+        div.middle {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            height: 70%;
+            width: 100%;
+        }
+
+        div.middle-left {
+            display: flex;
+            height: 100%;
+            width: 20%;
+        }
+
+        div.middle-center {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+            width: 60%;
+        }
+
+        div.middle-right {
+            display: flex;
+            height: 100%;
+            width: 20%;
+        }
+
+        div.middle-top {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            height: 33%;
+            width: 100%;
+        }
+
+        div.middle-middle {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            justify-content: center;
+            height: 33%;
+            width: 100%;
+        }
+
+        div.middle-bottom {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            height: 33%;
+            width: 100%;
+        }
+
+        div.bottom {
+            display: flex;
+            height: 12%;
+        }
+
+        #textboxid {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            border-bottom: 2px solid red;
+            background: #292d40;
+            color: #ffebcd;
+        }
+
+        #button {
+            height: 15px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 10px;
+            align-self: center;
+            background: #292d40;
+            color: #ffebcd;
+            margin: 2px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-wrapper {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            display: flex;
+            align-content: center;
+            align-self: center;
+        }
+
+        #new_game_button {
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            padding: 10%;
+            height: 100%;
+            font-size: 16pt;
+            font-weight: bold;
+            width: 80%;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            align-self: center;
+            align-items: center;
+            align-content: center;
+            background: #292d40;
+            color: #eee4e4;
+            margin: 30px 0px;
+            border: none;
+            cursor: pointer;
+            outline: 4px solid rgb(71, 113, 202);
+            outline-style: inset;
+        }
+
+        #answered {
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            padding: 10%;
+            height: 100%;
+            font-size: 16pt;
+            font-weight: bold;
+            width: 80%;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            align-self: center;
+            align-items: center;
+            align-content: center;
+            background: #292d40;
+            color: #ca1d1d;
+            margin: 30px 0px;
+            border: none;
+            cursor: pointer;
+            outline: 4px solid rgb(226, 47, 47);
+            outline-style: inset;
+        }
+
+        #correct {
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            padding: 10%;
+            height: 100%;
+            font-size: 16pt;
+            font-weight: bold;
+            width: 80%;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            align-self: center;
+            align-items: center;
+            align-content: center;
+            background: #292d40;
+            color: #1dca1d;
+            margin: 30px 0px;
+            border: none;
+            cursor: pointer;
+            outline: 4px solid rgb(47, 226, 101);
+            outline-style: inset;
+        }
+
+        .raise:hover,
+        .raise:focus {
+            box-shadow: 0 0.5em 0.5em 0em var(--hover);
+            transform: translateY(-0.5em);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex-container">
+        <div class="header"></div>
+        <div class="top"></div>
+        <div class="middle">
+            <div class="middle-left"></div>
+            <div class="middle-center">
+                <div class="middle-top">
+                    {% for quiz in result[:3] %}
+                    {% if quiz.answered == 0 %}
+                    <form class="button-wrapper" action="/quiz/{{ quiz.quiz_id }}" method="post">
+                        <button class="raise" value="submit" type="submit" id="new_game_button" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </form>
+                    {% else %}
+                    {% if quiz.correct == 1 %}
+                    <div class="button-wrapper">
+                        <button value="submit" type="submit" id="correct" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </div>
+                    {% else %}
+                    <div class="button-wrapper">
+                        <button value="submit" type="submit" id="answered" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="middle-middle">
+                    {% for quiz in result[3:6] %}
+                    {% if quiz.answered == 0 %}
+                    <form class="button-wrapper" action="/quiz/{{ quiz.quiz_id }}" method="post">
+                        <button class="raise" value="submit" type="submit" id="new_game_button" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </form>
+                    {% else %}
+                    {% if quiz.correct == 1 %}
+                    <div class="button-wrapper">
+                        <button value="submit" type="submit" id="correct" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </div>
+                    {% else %}
+                    <div class="button-wrapper">
+                        <button value="submit" type="submit" id="answered" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="middle-bottom">
+                    {% for quiz in result[6:9] %}
+                    {% if quiz.answered == 0 %}
+                    <form class="button-wrapper" action="/quiz/{{ quiz.quiz_id }}" method="post">
+                        <button class="raise" value="submit" type="submit" id="new_game_button" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </form>
+                    {% else %}
+                    {% if quiz.correct == 1 %}
+                    <div class="button-wrapper">
+                        <button value="submit" type="submit" id="correct" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </div>
+                    {% else %}
+                    <div class="button-wrapper">
+                        <button value="submit" type="submit" id="answered" type="button"
+                            size=20>{{ quiz.category }}</button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="middle-right"></div>
+        </div>
+        <div class="bottom"></div>
+    </div>
+</body>
+
+</html>
