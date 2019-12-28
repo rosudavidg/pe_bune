@@ -31,6 +31,7 @@
             display: flex;
             flex-direction: row;
             height: 10%;
+            align-content: center;
         }
 
         div.top-left {
@@ -93,11 +94,18 @@
             width: 100%;
         }
 
+        div.middle-middle {
+            display: flex;
+            align-items: center;
+            height: 10%;
+            width: 100%;
+        }
+
         div.middle-bottom {
             display: flex;
             align-items: center;
             flex-direction: column;
-            height: 80%;
+            height: 70%;
             width: 100%;
         }
 
@@ -140,16 +148,16 @@
         }
 
         #new_game_button {
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-            padding: 10%;
-            height: 100%;
+            /* display: inline-block; */
+            /* position: relative; */
+            /* z-index: 1; */
+            /* padding: 10%; */
+            height: 70%;
             font-size: 16pt;
             font-weight: bold;
-            width: 80%;
-            margin-top: 50px;
-            margin-bottom: 50px;
+            width: 100%;
+            /* margin-top: 50px; */
+            /* margin-bottom: 50px; */
             align-self: center;
             align-items: center;
             align-content: center;
@@ -162,52 +170,6 @@
             outline-style: inset;
         }
 
-        #answered {
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-            padding: 10%;
-            height: 100%;
-            font-size: 16pt;
-            font-weight: bold;
-            width: 80%;
-            margin-top: 50px;
-            margin-bottom: 50px;
-            align-self: center;
-            align-items: center;
-            align-content: center;
-            background: #292d40;
-            color: #ca1d1d;
-            margin: 30px 0px;
-            border: none;
-            cursor: pointer;
-            outline: 4px solid rgb(226, 47, 47);
-            outline-style: inset;
-        }
-
-        #correct {
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-            padding: 10%;
-            height: 100%;
-            font-size: 16pt;
-            font-weight: bold;
-            width: 80%;
-            margin-top: 50px;
-            margin-bottom: 50px;
-            align-self: center;
-            align-items: center;
-            align-content: center;
-            background: #292d40;
-            color: #1dca1d;
-            margin: 30px 0px;
-            border: none;
-            cursor: pointer;
-            outline: 4px solid rgb(47, 226, 101);
-            outline-style: inset;
-        }
-
         .raise:hover,
         .raise:focus {
             box-shadow: 0 0.5em 0.5em 0em var(--hover);
@@ -217,11 +179,21 @@
         .question {
             width: 100%;
             text-align: center;
+            font-size: 22pt;
         }
 
-        .answer {
+        .correct {
+            color: #1dca1d;
+            outline: 4px solid rgb(47, 226, 101);
+        }
+
+        .counter {
             width: 100%;
+            align-content: center;
             text-align: center;
+            align-self: center;
+            font-size: 26pt;
+            color: green;
         }
     </style>
 </head>
@@ -229,17 +201,29 @@
 <body>
     <div class="flex-container">
         <div class="header"></div>
-        <div class="top"></div>
+        <div class="top">
+            <div class="counter" id="countdown">30</div>
+        </div>
         <div class="middle">
             <div class="middle-left"></div>
             <div class="middle-center">
                 <div class="middle-top">
-                    <div class="question">{{ result[0] }}</div>
+                    <div class="question">{{ result[0].text }}</div>
                 </div>
+                <div class="middle-middle"></div>
                 <div class="middle-bottom">
-                    <div class="answer">{{ result[1] }}</div>
-                    <div class="answer">{{ result[2] }}</div>
-                    <div class="answer">{{ result[3] }}</div>
+
+                    <button name="button1" onclick="buttonClick(this)" class="raise" value="submit" type="submit"
+                        id="new_game_button" type="button" size=20
+                        correct="{{result[1].correct}}">{{ result[1].text }}</button>
+
+                    <button name="button2" onclick="buttonClick(this)" class="raise" value="submit" type="submit"
+                        id="new_game_button" type="button" size=20
+                        correct="{{result[2].correct}}">{{ result[2].text }}</button>
+
+                    <button name="button3" onclick="buttonClick(this)" class="raise" value="submit" type="submit"
+                        id="new_game_button" type="button" size=20
+                        correct="{{result[3].correct}}">{{ result[3].text }}</button>
                 </div>
             </div>
             <div class="middle-right"></div>
@@ -249,3 +233,100 @@
 </body>
 
 </html>
+
+<script>
+
+    counter = document.getElementsByClassName("counter")[0]
+
+    var timeleft = 30;
+    var stopped = false
+
+    var downloadTimer = setInterval(function () {
+        if (!stopped) {
+            timeleft -= 1;
+            document.getElementById("countdown").innerHTML = timeleft;
+
+            if (timeleft == 15) {
+                counter.style.color = 'yellow'
+            }
+
+            if (timeleft == 5) {
+                counter.style.color = 'red'
+            }
+
+            if (timeleft <= 0) {
+                clearInterval(downloadTimer);
+                document.getElementById("countdown").innerHTML = "TIMP EXPIRAT"
+
+                button1 = document.getElementsByName("button1")[0]
+                button2 = document.getElementsByName("button2")[0]
+                button3 = document.getElementsByName("button3")[0]
+
+                if (button1.getAttribute('correct') == 'True') {
+                    button1.style.color = "#1dca1d"
+                    button1.style.outline = "4px solid rgb(47, 226, 101)"
+                }
+                if (button2.getAttribute('correct') == 'True') {
+                    button2.style.color = "#1dca1d"
+                    button2.style.outline = "4px solid rgb(47, 226, 101)"
+                }
+                if (button3.getAttribute('correct') == 'True') {
+                    button3.style.color = "#1dca1d"
+                    button3.style.outline = "4px solid rgb(47, 226, 101)"
+                }
+                button1.class = "Disabled"
+                button2.class = "Disabled"
+                button3.class = "Disabled"
+
+                button1.setAttribute("disabled", true)
+                button2.setAttribute("disabled", true)
+                button3.setAttribute("disabled", true)
+
+                setTimeout(function () {
+                    window.location.href = '/answer/{{ result[0].quiz_id }}/False/0'
+                }, 3000);
+            }
+        }
+    }, 1000);
+
+    function buttonClick(button) {
+        stopped = true
+
+        button1 = document.getElementsByName("button1")[0]
+        button2 = document.getElementsByName("button2")[0]
+        button3 = document.getElementsByName("button3")[0]
+
+        if (button.getAttribute('correct') == 'True') {
+            button.style.color = "#1dca1d"
+            button.style.outline = "4px solid rgb(47, 226, 101)"
+        } else {
+            button.style.color = "#ca1d1d"
+            button.style.outline = "4px solid rgb(226, 47, 47)"
+
+            if (button1.getAttribute('correct') == 'True') {
+                button1.style.color = "#1dca1d"
+                button1.style.outline = "4px solid rgb(47, 226, 101)"
+            }
+            if (button2.getAttribute('correct') == 'True') {
+                button2.style.color = "#1dca1d"
+                button2.style.outline = "4px solid rgb(47, 226, 101)"
+            }
+            if (button3.getAttribute('correct') == 'True') {
+                button3.style.color = "#1dca1d"
+                button3.style.outline = "4px solid rgb(47, 226, 101)"
+            }
+        }
+
+        button1.class = "Disabled"
+        button2.class = "Disabled"
+        button3.class = "Disabled"
+
+        button1.setAttribute("disabled", true)
+        button2.setAttribute("disabled", true)
+        button3.setAttribute("disabled", true)
+
+        setTimeout(function () {
+            window.location.href = '/answer/{{ result[0].quiz_id }}/' + button.getAttribute("correct") + '/' + timeleft
+        }, 3000);
+    }
+</script>

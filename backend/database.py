@@ -264,10 +264,35 @@ class DB():
             cursor = self.db.cursor()
 
             res = cursor.callproc('get_quiz', (quiz_id, '', '', '', ''))
-            return (res[1], res[2], res[3], res[4])
+
+            d = [res[1],
+                {'text':res[2], 'correct': True},
+                {'text':res[3], 'correct': False},
+                {'text':res[4], 'correct': False}]
+
+            return d
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+    
+    def answer_quiz(self, username, quiz_id, correct, time):
+        try:
+            cursor = self.db.cursor()
+
+            cursor.callproc('answer_quiz', (quiz_id, username, correct, time))
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+
+    def end_game(self, game_id):
+        try:
+            cursor = self.db.cursor()
+
+            cursor.callproc('end_game', (game_id, ))
         except Exception as e:
             print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
-    

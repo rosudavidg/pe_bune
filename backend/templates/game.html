@@ -110,7 +110,12 @@
 
         div.bottom {
             display: flex;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            display: flex;
             height: 12%;
+            width: 100%;
         }
 
         #textboxid {
@@ -141,6 +146,16 @@
             height: 100%;
             width: 100%;
             flex-direction: column;
+            display: flex;
+            align-content: center;
+            align-self: center;
+        }
+
+        .end-button-wrapper {
+            height: 100%;
+            width: 10%;
+            /* margin: 2px 0; */
+            flex-direction: line;
             display: flex;
             align-content: center;
             align-self: center;
@@ -299,7 +314,13 @@
             </div>
             <div class="middle-right"></div>
         </div>
-        <div class="bottom"></div>
+        <div class="bottom">
+            {% if game_finished == True %}
+            <form class="end-button-wrapper" action="/endgame" method="post">
+                <button value="submit" type="submit" id="new_game_button" type="button">INCHEIE JOC</button>
+            </form>
+            {% endif %}
+        </div>
     </div>
 </body>
 

@@ -5,6 +5,7 @@ import database
 import datetime
 import time
 import os
+import random
 from flask_cors import CORS
 from models.user import User
 
@@ -57,15 +58,38 @@ def game():
         
         game_quizzes = database.DB().get_game_quizzes(game_id)
 
+        game_finished = True
+
         for quiz in game_quizzes:
+            if not quiz['answered']:
+                game_finished = False
             quiz['category'] = database.DB().get_category(quiz['quiz_id'])
 
-        return make_response(render_template('game.html', result=game_quizzes)), 200
+        return make_response(render_template('game.html', result=game_quizzes, game_finished=game_finished)), 200
 
     except Exception as e:
         return render_template('login.html'), 400
 
-    return username, 200
+@app.route('/endgame', methods=['POST', 'GET'])
+def endgame():
+    try:
+        username = database.DB().is_user_logged_in(request)
+
+        if username == None:
+            return redirect('/login')
+
+        game_id = None
+
+        if database.DB().game_exists(username):
+            game_id = database.DB().get_game_id(username)
+        else:
+            return redirect('/home')
+        
+        database.DB().end_game(game_id)
+
+        return redirect('/home')
+    except Exception as e:
+        return render_template('login.html'), 400
 
 @app.route('/quiz/<quiz_id>', methods=['POST', 'GET'])
 def quiz(quiz_id):
@@ -75,24 +99,35 @@ def quiz(quiz_id):
         if username == None:
             return redirect('/login')
 
-        # if database.DB().game_exists(username):
-        #     game_id = database.DB().get_game_id(username)
-        # else:
-        #     game_id = database.DB().create_game(username)
-        
-        # game_quizzes = database.DB().get_game_quizzes(game_id)
+        quiz = database.DB().get_quiz(quiz_id)
 
-        # for quiz in game_quizzes:
-        #     quiz['category'] = database.DB().get_category(quiz['quiz_id'])
-        # return str(), 200
-        e = database.DB().get_quiz(quiz_id)
+        question = {'text': quiz[0], 'quiz_id': quiz_id}
+        answers = quiz[1:]
 
-        return make_response(render_template('quiz.html', result=e)), 200
+        random.shuffle(answers)
+
+        result = [question] + answers
+
+        return make_response(render_template('quiz.html', result=result)), 200
 
     except Exception as e:
         return render_template('login.html'), 400
 
     return username, 200
+
+@app.route('/answer/<quiz_id>/<correct>/<time>', methods=['POST', 'GET'])
+def answer(quiz_id, correct, time):
+    try:
+        username = database.DB().is_user_logged_in(request)
+
+        if username == None:
+            return redirect('/login')
+        database.DB().answer_quiz(username, int(quiz_id), correct == 'True', int(time))
+
+    except Exception as e:
+        return render_template('login.html'), 400
+
+    return redirect('/game')
 
 @app.route('/logout', methods=['POST', 'GET'])
 def web_logout():
