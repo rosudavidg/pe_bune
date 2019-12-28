@@ -62,6 +62,6 @@ CREATE TABLE games_quizzes (
     quiz_id int NOT NULL,
     answered BOOLEAN NOT NULL DEFAULT FALSE,
     correct BOOLEAN NOT NULL DEFAULT FALSE,
-    score int NOT NULL DEFAULT 0,
+    time int NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );

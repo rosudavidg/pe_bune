@@ -390,3 +390,70 @@ BEGIN
     ;
 END //
 DELIMITER ;
+
+-- Procedura face update la o intrebare dintr-un joc
+DELIMITER //
+CREATE PROCEDURE answer_quiz (
+    IN in_quiz_id int,
+    IN in_username varchar(64),
+    IN in_correct boolean,
+    IN in_time integer)
+
+BEGIN
+    UPDATE games_quizzes
+        SET answered = true, correct = in_correct, time = in_time
+        WHERE username = in_username AND answered = False AND quiz_id = in_quiz_id
+    ;
+
+    COMMIT;
+END //
+DELIMITER ;
+
+-- Procedura care incheie un joc
+DELIMITER //
+CREATE PROCEDURE end_game (
+    IN in_game_id int)
+
+BEGIN
+    DECLARE varTime INTEGER;
+    DECLARE finished INTEGER DEFAULT 0;
+    DECLARE score INTEGER DEFAULT 0;
+    DECLARE varUsername varchar(64);
+    
+    DECLARE curQuiz
+        CURSOR FOR
+            SELECT time
+                FROM games_quizzes
+                WHERE game_id = in_game_id AND correct = TRUE
+    ;
+
+    DECLARE CONTINUE HANDLER 
+        FOR NOT FOUND SET finished = 1;
+
+    OPEN curQuiz;
+
+    addScore: LOOP
+        FETCH curQuiz INTO varTime;
+            IF finished = 1 THEN 
+                LEAVE addScore;
+            END IF;
+        
+        SET score = score + varTime;
+    END LOOP addScore;
+
+    SELECT username into varUsername
+        FROM games
+        WHERE id = in_game_id;
+
+    UPDATE users
+        SET experience = experience + score
+        WHERE username = varUsername;
+
+    UPDATE games
+        SET finished = True
+        WHERE id = in_game_id
+    ;
+
+    COMMIT;
+END //
+DELIMITER ;
