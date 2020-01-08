@@ -98,6 +98,22 @@ def endgame():
     except Exception as e:
         return render_template('login.html'), 400
 
+@app.route('/leaderboard', methods=['POST', 'GET'])
+def leaderboard():
+    try:
+        username = database.DB().is_user_logged_in(request)
+
+        if username == None:
+            return redirect('/login')
+
+        data = database.DB().get_leaderboard()
+        return make_response(render_template('leaderboard.html', result=data)), 200
+        return redirect('/login')
+
+    except Exception as e:
+        print(e)
+        return redirect('/login')
+
 @app.route('/quiz/<quiz_id>', methods=['POST', 'GET'])
 def quiz(quiz_id):
     try:

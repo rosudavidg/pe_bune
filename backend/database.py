@@ -122,6 +122,31 @@ class DB():
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
+
+    def get_leaderboard(self):
+        try:
+            cursor = self.db.cursor()
+            cursor.callproc('get_leaderboard')
+
+            ans = []
+            d = {}
+
+            for result in cursor.stored_results():
+                ans += result.fetchall()
+            
+            for a in ans:
+                d[a[0]] = {
+                    'num' : a[0],
+                    'username': a[1],
+                    'level': a[2],
+                    'experience': a[3]
+                }
+
+            return d
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
         
     def delete_quiz(self, id):
         try:

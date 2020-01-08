@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PE BUNE?!</title>
+    <style>
+        div.flex-container {
+            display: flex;
+            background-color: #292d40;
+            position: fixed;
+            padding: 0;
+            margin: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-content: center;
+            color: #ffebcd;
+            font: 18px/1.5 "Dosis", sans-serif;
+        }
+
+        div.top {
+            display: flex;
+            width: 100%;
+            height: 5%;
+        }
+
+        div.middle {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 80%;
+        }
+
+        div.middle-left {
+            display: flex;
+            width: 15%;
+            height: 100%;
+        }
+
+        div.middle-center {
+            display: flex;
+            width: 70%;
+            height: 100%;
+        }
+
+        div.middle-right {
+            display: flex;
+            width: 15%;
+            height: 100%;
+        }
+
+        div.bottom {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 15%;
+        }
+
+        #textboxid {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            border-bottom: 2px solid red;
+            background: #292d40;
+            color: #ffebcd;
+        }
+
+        #button {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            align-self: center;
+            background: #292d40;
+            color: #ffebcd;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button {
+            height: 30px;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            align-self: center;
+            background: #292d40;
+            color: #ffebcd;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            font: 14px/1.5 "Dosis", sans-serif;
+        }
+
+        td,
+        th {
+            border: 1px solid #222222;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #222222;
+        }
+
+        /* table thead tr {
+            display: block;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="flex-container">
+        <div class="top"></div>
+        <div class="middle">
+            <div class="middle-left"></div>
+            <div class="middle-center" style="overflow-y: scroll;overflow:auto; ">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pozitie</th>
+                            <th>Username</th>
+                            <th>Nivel</th>
+                            <th>Experienta</th>
+                        </tr>
+                        {% for id, user in result.items() %}
+                        <tr>
+                            <td> {{ id }} </td>
+                            <td> {{ user['username'] }} </td>
+                            <td> {{ user['level'] }} </td>
+                            <td> {{ user['experience'] }} </td>
+                        </tr>
+                        {% endfor %}
+                    </thead>
+                </table>
+            </div>
+            <div class="middle-right"></div>
+        </div>
+        <div class="bottom">
+            <form action="/home" method="post">
+                <button value="submit" type="submit" id="button" type="button" size=20>Back to home screen</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

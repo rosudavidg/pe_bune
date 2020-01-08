@@ -457,3 +457,15 @@ BEGIN
     COMMIT;
 END //
 DELIMITER ;
+
+-- Procedura pentru selectarea jucatorilor intr-un clasament
+DELIMITER //
+CREATE PROCEDURE get_leaderboard ()
+BEGIN
+    SET @row_number = 0;
+    SELECT (@row_number:=@row_number + 1) as num, username, level, experience
+    FROM users
+    ORDER BY level DESC, experience DESC
+    ;
+END //
+DELIMITER ;
