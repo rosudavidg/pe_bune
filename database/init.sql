@@ -75,13 +75,13 @@ CREATE TABLE levels (
 );
 
 -- Adaugarea de nivele
-INSERT INTO levels (level, experience) VALUES (1, 10);
-INSERT INTO levels (level, experience) VALUES (2, 20);
-INSERT INTO levels (level, experience) VALUES (3, 50);
-INSERT INTO levels (level, experience) VALUES (4, 100);
-INSERT INTO levels (level, experience) VALUES (5, 200);
-INSERT INTO levels (level, experience) VALUES (6, 500);
-INSERT INTO levels (level, experience) VALUES (7, 1000);
-INSERT INTO levels (level, experience) VALUES (8, 2000);
-INSERT INTO levels (level, experience) VALUES (9, 5000);
-INSERT INTO levels (level, experience) VALUES (10, 10000);
+INSERT INTO levels (level, experience) VALUES (1, 100);
+INSERT INTO levels (level, experience) VALUES (2, 200);
+INSERT INTO levels (level, experience) VALUES (3, 500);
+INSERT INTO levels (level, experience) VALUES (4, 1000);
+INSERT INTO levels (level, experience) VALUES (5, 2000);
+INSERT INTO levels (level, experience) VALUES (6, 5000);
+INSERT INTO levels (level, experience) VALUES (7, 10000);
+INSERT INTO levels (level, experience) VALUES (8, 20000);
+INSERT INTO levels (level, experience) VALUES (9, 50000);
+INSERT INTO levels (level, experience) VALUES (10, 100000);
