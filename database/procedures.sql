@@ -454,6 +454,9 @@ BEGIN
         WHERE id = in_game_id
     ;
 
+    -- Update level
+    CALL update_level(varUsername);
+
     COMMIT;
 END //
 DELIMITER ;
@@ -466,6 +469,54 @@ BEGIN
     SELECT (@row_number:=@row_number + 1) as num, username, level, experience
     FROM users
     ORDER BY level DESC, experience DESC
+    ;
+END //
+DELIMITER ;
+
+-- Procedura pentru actualizarea nivelului unui jucator
+DELIMITER //
+CREATE PROCEDURE update_level (
+    IN in_username varchar(64))
+BEGIN
+    DECLARE varLevel int;
+    DECLARE varExperience int;
+    DECLARE currentLevel int;
+    DECLARE currentExperience int;
+    DECLARE finished INTEGER DEFAULT 0;
+    
+    DECLARE curLevel
+        CURSOR FOR
+            SELECT
+                level, experience
+                FROM levels
+                ORDER BY level
+    ;
+
+    DECLARE CONTINUE HANDLER 
+        FOR NOT FOUND SET finished = 1;
+
+    SELECT level, experience
+        INTO currentLevel, currentExperience
+        FROM users
+        WHERE username = in_username;
+
+    OPEN curLevel;
+
+    checkLevel: LOOP
+        FETCH curLevel INTO varLevel, varExperience;
+            IF finished = 1 THEN 
+                LEAVE checkLevel;
+            END IF;
+
+            IF (varLevel - 1 = currentLevel AND varExperience <= currentExperience) THEN
+                SET currentExperience = currentExperience - varExperience;
+                SET currentLevel = currentLevel + 1;
+            END IF;
+    END LOOP checkLevel;
+
+    UPDATE users
+        SET level = currentLevel, experience = currentExperience
+        WHERE username = in_username
     ;
 END //
 DELIMITER ;

@@ -45,7 +45,7 @@ CREATE TABLE quizzes (
     PRIMARY KEY (id)
 );
 
--- Crearea tabelei pentru log-uri
+-- TODO: Crearea tabelei pentru log-uri
 
 -- Crearea tabelei pentru meciuri
 CREATE TABLE games (
@@ -55,6 +55,7 @@ CREATE TABLE games (
     PRIMARY KEY (id)
 );
 
+-- Crearea tabelei pentru intrebarile asociate jocurilor
 CREATE TABLE games_quizzes (
     id int AUTO_INCREMENT,
     game_id int NOT NULL,
@@ -65,3 +66,22 @@ CREATE TABLE games_quizzes (
     time int NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
+
+-- Crearea tabelei pentru nivele
+CREATE TABLE levels (
+    level int,
+    experience int NOT NULL,
+    PRIMARY KEY (level)
+);
+
+-- Adaugarea de nivele
+INSERT INTO levels (level, experience) VALUES (1, 10);
+INSERT INTO levels (level, experience) VALUES (2, 20);
+INSERT INTO levels (level, experience) VALUES (3, 50);
+INSERT INTO levels (level, experience) VALUES (4, 100);
+INSERT INTO levels (level, experience) VALUES (5, 200);
+INSERT INTO levels (level, experience) VALUES (6, 500);
+INSERT INTO levels (level, experience) VALUES (7, 1000);
+INSERT INTO levels (level, experience) VALUES (8, 2000);
+INSERT INTO levels (level, experience) VALUES (9, 5000);
+INSERT INTO levels (level, experience) VALUES (10, 10000);
