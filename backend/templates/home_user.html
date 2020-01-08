@@ -38,7 +38,7 @@
             align-content: center;
             align-items: center;
             flex-direction: column;
-            width: 15%;
+            width: 20%;
         }
 
         div.top-middle {
@@ -46,13 +46,18 @@
             flex-direction: column;
             align-content: center;
             align-items: center;
-            width: 70%;
+            width: 60%;
         }
 
         div.top-right {
             display: flex;
             flex-direction: column;
-            width: 15%;
+            /* align-content: center; */
+            /* align-items: center; */
+            width: 20%;
+            /* justify-content: center; */
+            /* flex-wrap: wrap; */
+            /* align-content: space-between; */
         }
 
         div.middle {
@@ -86,6 +91,10 @@
         div.bottom {
             display: flex;
             height: 12%;
+            width: 100%;
+            align-items: center;
+            align-self: center;
+            flex-direction: column;
         }
 
         #textboxid {
@@ -113,8 +122,8 @@
         }
 
         #new_game_button {
-            height: 30px;
-            font-size: 22pt;
+            height: 40px;
+            font-size: 20pt;
             font-weight: bold;
             width: 100%;
             margin-top: 50px;
@@ -131,8 +140,8 @@
         }
 
         #new_game_button:hover {
-            height: 30px;
-            font-size: 22pt;
+            height: 40px;
+            font-size: 20pt;
             /* font-weight: bold; */
             width: 100%;
             margin-top: 50px;
@@ -147,6 +156,19 @@
             outline-style: solid;
             outline-offset: 15px;
         }
+
+        .welcome-message {
+            height: 100%;
+            /* font-size: 100%; */
+            /* width: 100%; */
+        }
+
+        html {
+            height: 100%;
+            margin: auto;
+            width: 960px;
+            overflow: scroll;
+        }
     </style>
 </head>
 
@@ -159,24 +181,29 @@
                 <div>Experienta {{ result.experience }}</div>
             </div>
             <div class="top-middle">
-                Bun venit, {{ result.firstname }}!
+                <div class="welcome-message">Bun venit, {{ result.firstname }}!</div>
             </div>
             <div class="top-right">
-                <form action="/logout" method="post">
-                    <button value="submit" type="submit" id="button" type="button" size=20>LOG OUT</button>
-                </form>
+                <button onclick="window.location.href = '/logout'" value="submit" type="submit" id="button"
+                    type="button" size=20>Log out</button>
             </div>
         </div>
         <div class="middle">
             <div class="middle-top"></div>
             <div class="middle-middle">
                 <form action="/game" method="post">
-                    <button value="submit" type="submit" id="new_game_button" type="button" size=20>JOC NOU</button>
+                    <button value="submit" type="submit" id="new_game_button" type="button"
+                        size=20>{{ game_button_text }}</button>
                 </form>
             </div>
-            <div class="middle-bottom"></div>
+            <div class="middle-bottom">
+            </div>
         </div>
-        <div class="bottom"></div>
+        <div class="bottom">
+            <form action="/leaderboard" method="post">
+                <button value="submit" type="submit" id="button" type="button" size=20>Clasament</button>
+            </form>
+        </div>
     </div>
 </body>
 

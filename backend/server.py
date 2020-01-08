@@ -31,10 +31,17 @@ def home():
 
             return resp, 200
         
-        # TODO:
         # If user is not admin
         user = database.DB().get_user(username)
-        return make_response(render_template('home_user.html', result=user)), 200
+
+        
+        # Check if game exists
+        if database.DB().game_exists(username):
+            game_button_text = 'Continuă joc'
+        else:
+            game_button_text = 'Joc nou'
+
+        return make_response(render_template('home_user.html', result=user, game_button_text=game_button_text)), 200
         
     except Exception as e:
         return render_template('login.html'), 400

@@ -8,6 +8,8 @@
         div.container {
             height: 10em;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         div.container-small {
@@ -16,16 +18,27 @@
         }
 
         div.message {
+            display: flex;
             font: 16px/1.5 "Dosis", sans-serif;
             color: black;
             font-size: 3vw;
             color: white;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
         }
 
-        div.center {
-            display: flex;
-            justify-content: center;
-            align-content: center;
+        #button {
+            height: 100%;
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 20px;
+            align-self: center;
+            background: #292d40;
+            color: #ffebcd;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -34,12 +47,16 @@
     <div class="container" style="margin:auto">
         <img style="text-align:center;margin:auto;display: block;" src="/favicon.ico" style="text-align:center">
     </div>
-    <div class="container" style="display: flex; flex-direction: column; justify-content: center;flex-wrap:wrap;">
-        <div class="message ceter" style="display:flex;flex-wrap:wrap;justify-content: center">404</div>
-        <div class="message" style="display:flex;flex-wrap:wrap;justify-content: center">Page not found</div>
+    <div class="container">
+        <div class="top message">404</div>
+        <div class="bottom message">Page not found</div>
     </div>
     <div class="container"> </div>
-    <div class="container-small"> </div>
+    <div class="container-small">
+        <form action="/home" method="post">
+            <button value="submit" type="submit" id="button" type="button" size=20>Go back home</button>
+        </form>
+    </div>
     <div class="container-small"> </div>
 </body>
 

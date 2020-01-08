@@ -202,7 +202,7 @@
     <div class="flex-container">
         <div class="header"></div>
         <div class="top">
-            <div class="counter" id="countdown">30</div>
+            <div class="counter" id="countdown">60</div>
         </div>
         <div class="middle">
             <div class="middle-left"></div>
@@ -238,7 +238,7 @@
 
     counter = document.getElementsByClassName("counter")[0]
 
-    var timeleft = 30;
+    var timeleft = 60;
     var stopped = false
 
     var downloadTimer = setInterval(function () {
@@ -246,11 +246,11 @@
             timeleft -= 1;
             document.getElementById("countdown").innerHTML = timeleft;
 
-            if (timeleft == 15) {
+            if (timeleft == 30) {
                 counter.style.color = 'yellow'
             }
 
-            if (timeleft == 5) {
+            if (timeleft == 10) {
                 counter.style.color = 'red'
             }
 

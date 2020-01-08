@@ -130,14 +130,14 @@
         }
 
         #button {
-            height: 15px;
+            height: 30px;
             font-size: 14pt;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 20px;
             align-self: center;
             background: #292d40;
             color: #ffebcd;
-            margin: 2px 0;
+            margin: 8px 0;
             border: none;
             cursor: pointer;
         }
@@ -241,7 +241,15 @@
 <body>
     <div class="flex-container">
         <div class="header"></div>
-        <div class="top"></div>
+        <div class="top">
+            <div class="top-left"></div>
+            <div class="top-middle"></div>
+            <div class="top-right">
+                <form action="/home" method="post">
+                    <button value="submit" type="submit" id="button" type="button" size=20>Home</button>
+                </form>
+            </div>
+        </div>
         <div class="middle">
             <div class="middle-left"></div>
             <div class="middle-center">
