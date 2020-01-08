@@ -520,3 +520,34 @@ BEGIN
     ;
 END //
 DELIMITER ;
+
+-- Procedura primeste username-ul unui utilizator si intoarce statistici despre acel cont
+DELIMITER //
+CREATE PROCEDURE get_stats (
+    IN in_username varchar(64),
+    OUT out_games_played int,
+    OUT out_correct_answers int,
+    OUT out_wrong_answers int)
+BEGIN
+    SELECT COUNT(*) INTO out_games_played
+        FROM games
+        WHERE username = in_username
+        AND finished = TRUE
+    ;
+
+    SELECT COUNT(*) INTO out_correct_answers
+        FROM games_quizzes
+        WHERE username = in_username
+        AND answered = TRUE
+        AND correct = TRUE
+    ;
+
+    SELECT COUNT(*) INTO out_wrong_answers
+        FROM games_quizzes
+        WHERE username = in_username
+        AND answered = TRUE
+        AND correct = FALSE
+    ;
+
+END //
+DELIMITER ;

@@ -42,8 +42,24 @@
 
         div.middle-center {
             display: flex;
+            flex-direction: column;
             width: 70%;
             height: 100%;
+        }
+
+        div.middle-center-top {
+            display: flex;
+            width: 100%;
+            height: 50%;
+        }
+
+        div.middle-center-bottom {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            justify-content: center;
+            width: 100%;
+            height: 50%;
         }
 
         div.middle-right {
@@ -113,10 +129,6 @@
         tr:nth-child(even) {
             background-color: #222222;
         }
-
-        /* table thead tr {
-            display: block;
-        } */
     </style>
 </head>
 
@@ -125,26 +137,33 @@
         <div class="top"></div>
         <div class="middle">
             <div class="middle-left"></div>
-            <div class="middle-center" style="overflow-y: scroll;overflow:auto; ">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pozitie</th>
-                            <th>Username</th>
-                            <th>Nivel</th>
-                            <th>Experienta</th>
-                        </tr>
-                        {% for id, user in result.items() %}
-                        <tr>
-                            <td> {{ id }} </td>
-                            <td> {{ user['username'] }} </td>
-                            <td> {{ user['level'] }} </td>
-                            <td> {{ user['experience'] }} </td>
-                        </tr>
-                        {% endfor %}
-                    </thead>
-                </table>
+            <div class="middle-center">
+                <div class="middle-center-top" style="overflow-y: scroll;overflow:auto; ">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pozitie</th>
+                                <th>Username</th>
+                                <th>Nivel</th>
+                                <th>Experienta</th>
+                            </tr>
+                            {% for id, user in result.items() %}
+                            <tr>
+                                <td> {{ id }} </td>
+                                <td> {{ user['username'] }} </td>
+                                <td> {{ user['level'] }} </td>
+                                <td> {{ user['experience'] }} </td>
+                            </tr>
+                            {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+                <div class="middle-center-bottom">
+                    <div style="align-self: center;"> Numarul de jocuri jucate: {{ played_games }}</div>
+                    <div id="piechart" style="width: 100%; height: 100%;"></div>
+                </div>
             </div>
+
             <div class="middle-right"></div>
         </div>
         <div class="bottom">
@@ -157,3 +176,27 @@
 </body>
 
 </html>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+            ['Raspunsuri', 'Numarul de raspunsuri'],
+            ['Raspunsuri corecte', {{ correct_answers }} ],
+    ['Raspunsuri gresite', {{ wrong_answers }}]
+        ]);
+
+    var options = {
+        backgroundColor: '#292d40',
+        legend: { position: 'none' }
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+    }
+</script>

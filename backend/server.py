@@ -107,8 +107,9 @@ def leaderboard():
             return redirect('/login')
 
         data = database.DB().get_leaderboard()
-        return make_response(render_template('leaderboard.html', result=data)), 200
-        return redirect('/login')
+        (played_games, correct_answers, wrong_answers) = database.DB().get_stats(username)
+
+        return make_response(render_template('leaderboard.html', result=data, played_games=played_games, correct_answers=correct_answers, wrong_answers=wrong_answers)), 200
 
     except Exception as e:
         print(e)

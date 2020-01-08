@@ -321,3 +321,20 @@ class DB():
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
+
+    def get_stats(self, username):
+        try:
+            cursor = self.db.cursor()
+
+            res = cursor.callproc('get_stats', (username, '', '', ''))
+
+            games_played = res[1]
+            correct_answers = res[2]
+            wrong_answers = res[3]
+
+            return games_played, correct_answers, wrong_answers
+        except Exception as e:
+            print(e)
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
