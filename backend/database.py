@@ -338,3 +338,13 @@ class DB():
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
+    
+    def logout(self, username):
+        try:
+            cursor = self.db.cursor()
+            cursor.callproc('logout', (username,))
+        except Exception as e:
+            raise Exception(error.Error.new(e))
+        finally:
+            cursor.close()
+    

@@ -24,14 +24,20 @@ CREATE TABLE sessions (
     username varchar(64) NOT NULL,
     token varchar(256),
     expiration_date datetime NOT NULL,
-    PRIMARY KEY (token)
+    PRIMARY KEY (token),
+    FOREIGN KEY (username)
+        REFERENCES users(username)
+        ON DELETE CASCADE
 );
 
 -- Crearea tabelei pentru activation token
 CREATE TABLE activations (
     email varchar(256) NOT NULL,
     token varchar(64),
-    PRIMARY KEY (email)
+    PRIMARY KEY (email),
+    FOREIGN KEY (email)
+        REFERENCES users(email)
+        ON DELETE CASCADE
 );
 
 -- Crearea tabelei pentru intrebari
@@ -51,7 +57,10 @@ CREATE TABLE logs (
     username varchar(64) NOT NULL,
     log_time datetime NOT NULL,
     description varchar(256),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (username)
+        REFERENCES users(username)
+        ON DELETE CASCADE
 );
 
 -- Crearea tabelei pentru meciuri
@@ -59,7 +68,10 @@ CREATE TABLE games (
     id int AUTO_INCREMENT,
     username varchar(64) NOT NULL,
     finished BOOLEAN NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (username)
+        REFERENCES users(username)
+        ON DELETE CASCADE
 );
 
 -- Crearea tabelei pentru intrebarile asociate jocurilor
@@ -71,7 +83,16 @@ CREATE TABLE games_quizzes (
     answered BOOLEAN NOT NULL DEFAULT FALSE,
     correct BOOLEAN NOT NULL DEFAULT FALSE,
     time int NOT NULL DEFAULT 0,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (username)
+        REFERENCES users(username)
+        ON DELETE CASCADE,
+    FOREIGN KEY (game_id)
+        REFERENCES games(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (quiz_id)
+        REFERENCES quizzes(id)
+        ON DELETE CASCADE
 );
 
 -- Crearea tabelei pentru nivele

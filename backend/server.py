@@ -155,6 +155,17 @@ def answer(quiz_id, correct, time):
 
 @app.route('/logout', methods=['POST', 'GET'])
 def web_logout():
+    try:
+        username = database.DB().is_user_logged_in(request)
+        
+        if username == None:
+            return redirect('/login')
+        
+        database.DB().logout(username)
+
+    except :
+        return redirect('/home')
+
     resp = make_response(redirect('/login'))
 
     resp.set_cookie(key='pebune_token',

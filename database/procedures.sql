@@ -468,6 +468,7 @@ BEGIN
     SET @row_number = 0;
     SELECT (@row_number:=@row_number + 1) as num, username, level, experience
     FROM users
+    WHERE is_admin = FALSE
     ORDER BY level DESC, experience DESC
     ;
 END //
@@ -548,6 +549,21 @@ BEGIN
         AND answered = TRUE
         AND correct = FALSE
     ;
+
+END //
+DELIMITER ;
+
+-- Procedura pentru deconectarea unui utilizator
+DELIMITER //
+CREATE PROCEDURE logout (
+    IN in_username varchar(64))
+BEGIN
+
+    DELETE
+        FROM sessions
+        WHERE username = in_username
+    ;
+    COMMIT;
 
 END //
 DELIMITER ;
