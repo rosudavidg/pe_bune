@@ -45,7 +45,14 @@ CREATE TABLE quizzes (
     PRIMARY KEY (id)
 );
 
--- TODO: Crearea tabelei pentru log-uri
+-- Crearea tabelei pentru log-uri
+CREATE TABLE logs (
+    id int AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    log_time datetime NOT NULL,
+    description varchar(256),
+    PRIMARY KEY (id)
+);
 
 -- Crearea tabelei pentru meciuri
 CREATE TABLE games (
