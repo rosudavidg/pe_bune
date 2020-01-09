@@ -33,7 +33,6 @@ def home():
         
         # If user is not admin
         user = database.DB().get_user(username)
-
         
         # Check if game exists
         if database.DB().game_exists(username):
@@ -45,8 +44,6 @@ def home():
         
     except Exception as e:
         return render_template('login.html'), 400
-
-    return render_template('home.html', result=request.form)
 
 @app.route('/game', methods=['POST', 'GET'])
 def game():
@@ -75,7 +72,7 @@ def game():
         return make_response(render_template('game.html', result=game_quizzes, game_finished=game_finished)), 200
 
     except Exception as e:
-        return render_template('login.html'), 400
+        return redirect('/home')
 
 @app.route('/endgame', methods=['POST', 'GET'])
 def endgame():
@@ -96,7 +93,7 @@ def endgame():
 
         return redirect('/home')
     except Exception as e:
-        return render_template('login.html'), 400
+        return redirect('/home')
 
 @app.route('/leaderboard', methods=['POST', 'GET'])
 def leaderboard():
@@ -112,8 +109,7 @@ def leaderboard():
         return make_response(render_template('leaderboard.html', result=data, played_games=played_games, correct_answers=correct_answers, wrong_answers=wrong_answers)), 200
 
     except Exception as e:
-        print(e)
-        return redirect('/login')
+        return redirect('/home')
 
 @app.route('/quiz/<quiz_id>', methods=['POST', 'GET'])
 def quiz(quiz_id):
@@ -135,9 +131,7 @@ def quiz(quiz_id):
         return make_response(render_template('quiz.html', result=result)), 200
 
     except Exception as e:
-        return render_template('login.html'), 400
-
-    return username, 200
+        return redirect('/home')
 
 @app.route('/answer/<quiz_id>/<correct>/<time>', methods=['POST', 'GET'])
 def answer(quiz_id, correct, time):
@@ -187,7 +181,7 @@ def web_delete():
         return redirect(url_for('home'))
 
     except Exception as e:
-        return render_template('login.html'), 400
+        return redirect('/home')
 
 @app.route('/add', methods=['POST', 'GET'])
 def web_add():
@@ -203,9 +197,7 @@ def web_add():
         data = database.DB().get_quizzes()
         return redirect(url_for('home'))
     except Exception as e:
-        return render_template('login.html'), 200
-
-    # return render_template('home.html', result=request.form)
+        return redirect('/home')
 
 @app.route('/login', methods=['POST', 'GET'])
 def web_login():
@@ -236,14 +228,14 @@ def web_login():
                 httponly=False)
             
             return resp
+        else:
+            return render_template('login.html')
+
     except Exception as e:
         return render_template('login.html'), 400
 
-    return render_template('login.html')
-
 @app.route('/register', methods=['POST', 'GET'])
 def web_register(errors=[]):
-
     if request.method == "POST":
         errors = False
 
