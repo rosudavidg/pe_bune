@@ -92,7 +92,6 @@ class DB():
 
             return (token, expiration_date)
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
@@ -317,7 +316,6 @@ class DB():
 
             cursor.callproc('end_game', (game_id, ))
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
@@ -334,7 +332,6 @@ class DB():
 
             return games_played, correct_answers, wrong_answers
         except Exception as e:
-            print(e)
             raise Exception(error.Error.new(e))
         finally:
             cursor.close()
