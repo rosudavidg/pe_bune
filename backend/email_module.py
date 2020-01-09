@@ -10,7 +10,7 @@ def send_activation_link(to_email=1, token=1):
     to = [to_email]
     subject = 'Pe bune?! Activation link'
     body = """\
-    Hello and thanks for registration!\n\n
+    Hello and thanks for registration!\n
     Here is your activation link:\n
     %s\n\n
     David
