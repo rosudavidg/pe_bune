@@ -268,41 +268,7 @@ CREATE PROCEDURE create_game (
     IN in_username varchar(64),
     OUT out_game_id int)
 BEGIN
-    DECLARE varCategory varchar(256);
-    DECLARE finished INTEGER DEFAULT 0;
-    
-    DECLARE curCategory
-        CURSOR FOR
-            SELECT
-                DISTINCT category
-                FROM quizzes
-                ORDER BY rand()
-                LIMIT 9
-    ;
-
-    DECLARE CONTINUE HANDLER 
-        FOR NOT FOUND SET finished = 1;
-
-    INSERT
-        INTO games (username)
-        VALUES (in_username)
-    ;
-
-    SELECT LAST_INSERT_ID() INTO out_game_id;
-
-    OPEN curCategory;
-
-    addRandomQuiz: LOOP
-        FETCH curCategory INTO varCategory;
-            IF finished = 1 THEN 
-                LEAVE addRandomQuiz;
-            END IF;
-            INSERT INTO
-                games_quizzes (game_id, username, quiz_id)
-            VALUES (out_game_id, in_username, (select id from quizzes where category=varCategory order by rand() LIMIT 1))
-            ;
-    END LOOP addRandomQuiz;
-
+    SELECT create_game_function(in_username) INTO out_game_id;
     COMMIT;
 END //
 DELIMITER ;

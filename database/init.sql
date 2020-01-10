@@ -4,6 +4,13 @@ CREATE DATABASE pe_bune;
 -- Selectarea bazei de date
 use pe_bune;
 
+-- Crearea tabelei pentru nivele
+CREATE TABLE levels (
+    level int,
+    experience int NOT NULL,
+    PRIMARY KEY (level)
+);
+
 -- Crearea tabelei pentru utilizatori
 CREATE TABLE users (
     username varchar(64),
@@ -16,7 +23,9 @@ CREATE TABLE users (
     created_date datetime NOT NULL,
     activated BOOLEAN NOT NULL,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (username)
+    PRIMARY KEY (username),
+    FOREIGN KEY (level)
+        REFERENCES levels(level)
 );
 
 -- Crearea tabelei pentru sesiuni
@@ -33,7 +42,7 @@ CREATE TABLE sessions (
 -- Crearea tabelei pentru activation token
 CREATE TABLE activations (
     email varchar(256) NOT NULL,
-    token varchar(64),
+    token varchar(64) NOT NULL UNIQUE,
     PRIMARY KEY (email),
     FOREIGN KEY (email)
         REFERENCES users(email)
@@ -56,7 +65,7 @@ CREATE TABLE logs (
     id int AUTO_INCREMENT,
     username varchar(64) NOT NULL,
     log_time datetime NOT NULL,
-    description varchar(256),
+    description varchar(256) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (username)
         REFERENCES users(username)
@@ -95,14 +104,8 @@ CREATE TABLE games_quizzes (
         ON DELETE CASCADE
 );
 
--- Crearea tabelei pentru nivele
-CREATE TABLE levels (
-    level int,
-    experience int NOT NULL,
-    PRIMARY KEY (level)
-);
-
 -- Adaugarea de nivele
+INSERT INTO levels (level, experience) VALUES (0, 0);
 INSERT INTO levels (level, experience) VALUES (1, 100);
 INSERT INTO levels (level, experience) VALUES (2, 200);
 INSERT INTO levels (level, experience) VALUES (3, 500);
